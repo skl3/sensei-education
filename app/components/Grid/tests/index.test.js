@@ -1,9 +1,9 @@
 // import React from 'react';
 // import { shallow } from 'enzyme';
 
-// import { Home } from '../index';
+// import Grid from '../index';
 
-describe('<Home />', () => {
+describe('<Grid />', () => {
   it('Expect to have unit tests specified', () => {
     expect(true).toEqual(false);
   });

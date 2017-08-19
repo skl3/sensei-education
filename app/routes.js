@@ -22,17 +22,41 @@ export default function createRoutes(store) {
       name: 'home',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
+          import('containers/HomePage/reducer'),
+          import('containers/HomePage/sagas'),
           import('containers/HomePage'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('home', reducer.default);
+          injectSagas(sagas.default);
           renderRoute(component);
         });
 
         importModules.catch(errorLoading);
       },
+    }, {
+      path: '/webcam',
+      name: 'webcam',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/WebcamPage/reducer'),
+          import('containers/WebcamPage/sagas'),
+          import('containers/WebcamPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('webcam', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      }
     }, {
       path: '*',
       name: 'notfound',

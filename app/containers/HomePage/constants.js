@@ -1,0 +1,15 @@
+/*
+ *
+ * Home constants
+ *
+ */
+
+export const DEFAULT_ACTION = 'app/Home/DEFAULT_ACTION';
+
+export const GENERATE_CLASS_CODE = 'app/Home/GENERATE_CLASS_CODE';
+export const GENERATE_CLASS_CODE_SUCCESS = 'app/Home/GENERATE_CLASS_CODE_SUCCESS';
+export const GENERATE_CLASS_CODE_ERROR = 'app/Home/GENERATE_CLASS_CODE_ERROR';
+
+export const SEARCH_CLASS_CODE = 'app/Home/SEARCH_CLASS_CODE';
+export const SEARCH_CLASS_CODE_SUCCESS = 'app/Home/SEARCH_CLASS_CODE_SUCCESS';
+export const SEARCH_CLASS_CODE_ERROR = 'app/Home/SEARCH_CLASS_CODE_ERROR';
