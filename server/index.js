@@ -18,7 +18,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => console.log('MongoDB connection @:', mongodbUrl));
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
-app.use('/api', require('./routes'));
+// app.use('/api', require('./routes'));
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

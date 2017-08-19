@@ -40,6 +40,10 @@ export class Header extends React.PureComponent {
           <span>school</span>
         </span>
 
+        <Item key="teacher" style={linkStyle}>
+          <Link to="/teacher">Teacher</Link>
+        </Item>
+
         <Item key="camera" style={linkStyle}>
           <Link to="/webcam">Class</Link>
         </Item>
