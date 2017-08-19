@@ -58,15 +58,6 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
         />
         <div style={containerStyle}>
           <Row>
-            <Col span={8} offset={8}>
-              <img
-                src="http://via.placeholder.com/300x150"
-                style={{ display: 'block', marginRight: 'auto', marginLeft: 'auto' }}
-              />
-            </Col>
-          </Row>
-          <br />
-          <Row>
             <Col span={8} offset={8} style={{ textAlign: 'center' }}>
               <h3>Join a Classroom!</h3>
               <br />
