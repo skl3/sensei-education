@@ -46,7 +46,7 @@ export function* recordVideoImage(action) {
     	body: JSON.stringify(data),
     });
     console.log('emotion', emotion);
-    yield put(videoDataRecorded(emotion));
+    yield put(videoImageRecorded(emotion));
   } catch (err) {
     yield put(recordVideoImageError(err));
   }

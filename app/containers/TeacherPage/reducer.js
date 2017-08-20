@@ -51,7 +51,7 @@ function teacherPageReducer(state = initialState, action) {
       return state
         .set('loadingClassroom', false)
         .set('classroom', action.classroom)
-        .set('sessions', _.keyBy(action.classroom.sessions, session => session.id));
+        .set('sessions', _.keyBy(action.classroom.sessions, session => session._id));
     case QUERY_CLASSROOM_ERROR:
       return state
         .set('loadingClassroom', false);

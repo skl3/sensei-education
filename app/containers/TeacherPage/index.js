@@ -4,6 +4,7 @@
  *
  */
 
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
@@ -57,9 +58,9 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
       <Line
-        key="confused"
+        key="neutral"
         type="monotone"
-        dataKey="confused"
+        dataKey="neutral"
         stroke="#800080"
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
@@ -71,9 +72,23 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
       <Line
-        key="disgusted"
+        key="disgust"
         type="monotone"
-        dataKey="disgusted"
+        dataKey="disgust"
+        stroke="#0000FF"
+        strokeOpacity="0.9"
+        strokeDasharray="3 3" />,
+      <Line
+        key="surprise"
+        type="monotone"
+        dataKey="surprise"
+        stroke="#0000FF"
+        strokeOpacity="0.9"
+        strokeDasharray="3 3" />,
+      <Line
+        key="fear"
+        type="monotone"
+        dataKey="fear"
         stroke="#0000FF"
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
@@ -92,9 +107,11 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
           _avg_data[curdata[j]['time']] = {
             "sad": curdata[j]["sad"],
             "happy": curdata[j]["happy"],
-            "confused": curdata[j]["confused"],
+            "neutral": curdata[j]["neutral"],
             "angry": curdata[j]["angry"],
-            "disgusted": curdata[j]["disgusted"],
+            "disgust": curdata[j]["disgust"],
+            "fear": curdata[j]["fear"],
+            "surprise": curdata[j]["surprise"],
             "num_instances": 1,
           };
         } else {
@@ -102,9 +119,11 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
           _avg_data[curdata[j]['time']] = {
             "sad": curdata[j]["sad"] + old_data["sad"],
             "happy": curdata[j]["happy"] + old_data["happy"],
-            "confused": curdata[j]["confused"] + old_data["confused"],
+            "neutral": curdata[j]["neutral"] + old_data["neutral"],
             "angry": curdata[j]["angry"] + old_data["angry"],
-            "disgusted": curdata[j]["disgusted"] + old_data["disgusted"],
+            "disgust": curdata[j]["disgust"] + old_data["disgust"],
+            "fear": curdata[j]["fear"] + old_data["fear"],
+            "surprise": curdata[j]["surprise"] + old_data["surprise"],
             "num_instances": old_data["num_instances"] + 1,
           }
         }
@@ -121,9 +140,11 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         "time": i,
         "sad": _avg_data[i]["sad"] / _avg_data[i]["num_instances"],
         "happy": _avg_data[i]["happy"] / _avg_data[i]["num_instances"],
-        "confused": _avg_data[i]["confused"] / _avg_data[i]["num_instances"],
+        "neutral": _avg_data[i]["neutral"] / _avg_data[i]["num_instances"],
         "angry": _avg_data[i]["angry"] / _avg_data[i]["num_instances"],
-        "disgusted": _avg_data[i]["disgusted"] / _avg_data[i]["num_instances"],
+        "disgust": _avg_data[i]["disgust"] / _avg_data[i]["num_instances"],
+        "fear": _avg_data[i]["fear"] / _avg_data[i]["num_instances"],
+        "surprise": _avg_data[i]["surprise"] / _avg_data[i]["num_instances"],
       });
     });
 
@@ -150,6 +171,11 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
   render() {
     const InputGroup = Input.Group;
     const { classroom, sessions } = this.props;
+    const filteredSessions = _.values(
+      _.pickBy(sessions, (value, key) => value && value.emotions && (value.emotions.length > 2))
+    ).map((session) => session.emotions);
+    console.log(filteredSessions, 'filteredSessions');
+
     const containerStyle = {
       paddingRight: '15px',
       paddingLeft: '15px',
@@ -159,6 +185,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
       marginBottom: '30px',
       width: '970px',
     };
+
     const footerContainerStyle = {
       paddingRight: '15px',
       paddingLeft: '15px',
@@ -169,42 +196,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
       textAlign: 'center',
     };
 
-    const modelData = [
-      [{
-        "time": 1,
-        "sad": .23,
-        "happy": .53,
-        "confused": .28,
-        "angry": .19,
-        "disgusted": .05
-      },
-      {
-        "time": 4,
-        "sad": .18,
-        "happy": .89,
-        "confused": .17,
-        "angry": .11,
-        "disgusted": .03
-      }],
-      [{
-        "time": 1,
-        "sad": .89,
-        "happy": .47,
-        "confused": .46,
-        "angry": .07,
-        "disgusted": .12
-      },
-      {
-        "time": 4,
-        "sad": .56,
-        "happy": .23,
-        "confused": .50,
-        "angry": .09,
-        "disgusted": .16
-      }]
-    ];
-
-    const lineCharts = modelData.map((item, i) => {
+    const lineCharts = filteredSessions.map((item, i) => {
       return (
         <div className='line-chart-wrapper' key={`${i}-item`}
           style={{paddingTop: '20px', paddingBottom: '20px'}}>
@@ -213,7 +205,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
             style={{marginLeft: 'auto', marginRight: 'auto'}}
           >
             <CartesianGrid stroke='#f5f5f5' fill="white" />
-            <XAxis type="number" dataKey="time" height={40} label="Time" />
+            <XAxis type="number" dataKey="videoTs" height={40} label="Time" />
             <YAxis type="number" domain={[0, 1]}>
               <Label value="Emotion Probability" angle={270} />
             </YAxis>
@@ -225,7 +217,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
       );
     });
 
-    const avgLineChart = this.genAvgLineChart(modelData);
+    const avgLineChart = this.genAvgLineChart(filteredSessions);
 
     return (
       <div>
@@ -265,7 +257,12 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
                   </div>
                   <div style={{paddingTop: '5px', paddingBottom: '5px'}}>
                     <h2 style={{fontFamily: 'Montserrat', fontSize: '15'}}>Description</h2>
-                    <Input value={classroom ? classroom.description : ""} onChange={(e) => this.props.onUpdateClassroomValue('description', e.target.value)}/>
+                    <Input
+                      type="textarea"
+                      value={classroom ? classroom.description : ""}
+                      autosize={{ minRows: 2, maxRows: 6 }}
+                      onChange={(e) => this.props.onUpdateClassroomValue('description', e.target.value)}
+                    />
                   </div>
                   <div style={{paddingTop: '5px', paddingBottom: '5px'}}>
                     <h2 style={{fontFamily: 'Montserrat', fontSize: '15'}}>Video URL</h2>
@@ -281,7 +278,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
                   <Button type="primary" onClick={() => this.props.onUpdateClassroom(classroom)}>Save</Button>
                 </div>
               </Col>
-              <Col span={4} offset={1}>
+              <Col span={7} offset={1}>
                 <h2 style={{fontFamily: 'Montserrat', fontSize: '15'}}>Tags</h2>
                 { classroom ? classroom.tags.map((tag, i) => (<Tag key={`${i}-tag`}>{tag}</Tag>)) : null }
                 { classroom ? (
@@ -301,6 +298,19 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
                       />
                     </div>
                   </InputGroup>) : <p style={{ fontFamily: 'Montserrat', fontSize: '12px'}}>No tags found.</p> }
+                  <br />
+                  <h2 style={{fontFamily: 'Montserrat', fontSize: '15'}}>Send Link</h2>
+                  <InputGroup style={{ marginTop: '10px' }}>
+                    <Input
+                      value={`/webcam/${classroom.classCode}`}
+                      disabled={true}
+                    />
+                    <div className="ant-input-group-wrap">
+                      <Button icon="copy" onClick={(e) => {
+                        e.clipboardData.setData('text/plain', '/webcam/' + classroom.classCode);
+                      }} />
+                    </div>
+                  </InputGroup>
               </Col>
             </Row>
           </div>

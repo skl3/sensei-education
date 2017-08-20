@@ -19,7 +19,7 @@ import {
 
 const initialState = fromJS({
   classroom: false,
-  emotions: false,
+  emotions: [],
   session: false,
 });
 
@@ -47,7 +47,7 @@ function webcamPageReducer(state = initialState, action) {
       return state;
     case RECORD_VIDEO_IMAGE_SUCCESS:
       return state
-        .set('emotions', state.get('emotions') ? [...state.get('emotions'), action.emotion] : null );
+        .set('emotions', state.get('emotions') && state.get('emotions').length > 0 ? [...state.get('emotions'), action.emotion] : [action.emotion] );
     case RECORD_VIDEO_IMAGE_ERROR:
       return state;
     default:

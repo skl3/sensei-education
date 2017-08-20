@@ -36,7 +36,8 @@ router.get('/classrooms', (req, res, next) => {
 // get public classrooms
 router.get('/classrooms/public', (req, res, next) => {
   return Classroom.find({ isPublic: true })
-    .then(classrooms => res.status(200).json(classrooms))
+    .then(classrooms => res.status(200).json(
+      classrooms.filter((classroom) => classroom.title && classroom.videoUrl)))
     .catch(err => {
       console.error("Error fetching classrooms", err);
       throw new Error("Error fetching classrooms", err);

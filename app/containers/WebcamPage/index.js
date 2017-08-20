@@ -96,13 +96,12 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           ]}
         />
         <div>
-          <div>Emotions: { JSON.stringify(session) }</div>
-          <div>Session: { JSON.stringify(session) }</div>
-          <div>Classroom: { JSON.stringify(classroom) }</div>
-          <div style={{width: '100%', marginLeft: 'auto',
-                       marginRight: 'auto', paddingLeft: '30px',
-                       paddingRight: '30px', paddingTop: '20px',
-                       paddingBottom: '20px'}}>
+          <div style={{
+            width: '100%', marginLeft: 'auto',
+            marginRight: 'auto', paddingLeft: '30px',
+            paddingRight: '30px', paddingTop: '20px',
+            paddingBottom: '20px'
+          }}>
             <div>
               <p style={{fontSize: '15px'}}>
                 <b>Disclaimer:</b> SentiSchool will use data from your webcam to estimate
@@ -161,12 +160,12 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                 would receive a similar graph.
               </p>
               <div className='line-chart-wrapper' key='item' style={{marginTop: '30px'}}>
-                <LineChart width={700} height={200} data={[]} syncId="test">
+                <LineChart width={700} height={200} data={emotions} syncId="test">
                   <CartesianGrid stroke='#f5f5f5' fill="white" />
-                  <XAxis type="number" domain={[0, this.state.videoLength]} dataKey="time" height={40}>
+                  <XAxis type="number" domain={[0, this.state.videoLength]} dataKey="videoTs" height={40}>
                     <Label value="Time (Seconds)" />
                   </XAxis>
-                  <YAxis type="number" domain={[0, 100]}>
+                  <YAxis type="number" domain={[0, 1]}>
                     <Label value="Emotion Level" angle={270} />
                   </YAxis>
                   <Legend verticalAlign="top" height={36}/>
@@ -186,9 +185,9 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                     strokeOpacity="0.9"
                     strokeDasharray="3 3" />
                   <Line
-                    key="confused"
+                    key="neutral"
                     type="monotone"
-                    dataKey="confused"
+                    dataKey="neutral"
                     stroke="#800080"
                     strokeOpacity="0.9"
                     strokeDasharray="3 3" />
@@ -200,12 +199,26 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                     strokeOpacity="0.9"
                     strokeDasharray="3 3" />
                   <Line
-                    key="disgusted"
+                    key="disgust"
                     type="monotone"
-                    dataKey="disgusted"
+                    dataKey="disgust"
                     stroke="#0000FF"
                     strokeOpacity="0.9"
-                    strokeDasharray="3 3" />
+                    strokeDasharray="3 3" />,
+                  <Line
+                    key="surprise"
+                    type="monotone"
+                    dataKey="surprise"
+                    stroke="#0000FF"
+                    strokeOpacity="0.9"
+                    strokeDasharray="3 3" />,
+                  <Line
+                    key="fear"
+                    type="monotone"
+                    dataKey="fear"
+                    stroke="#0000FF"
+                    strokeOpacity="0.9"
+                    strokeDasharray="3 3" />,
                 </LineChart>
              </div>
             </div>

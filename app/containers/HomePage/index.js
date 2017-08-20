@@ -9,6 +9,7 @@ import { Row, Col, Input, Button, Card } from 'antd';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
+import ClassCard from '../../components/ClassCard';
 
 import { queryPublicClassrooms, generateClassroom, searchClassroom } from './actions';
 import makeSelectHome, { selectClassrooms, selectLoadingClassrooms } from './selectors';
@@ -88,7 +89,6 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
             { name: 'description', content: 'Description of Home' },
           ]}
         />
-        <div>{ JSON.stringify(classrooms) }</div>
         <div style={titleContainerStyle}>
           <div style={rowDescriptionStyle}>
             <h1 style={{fontFamily: 'Montserrat', fontSize: 40, color: 'white'}}>Welcome to SentiSchool</h1>
@@ -166,6 +166,15 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
                     </div>
                   </Card>
                 </Col>
+              </Row>
+              <hr style={{ margin: '20px 0' }}/>
+              <h1 style={{fontFamily: 'Montserrat', fontSize: 20, textAlign: 'center', margin: '40px 0' }}>Public Courses</h1>
+              <Row>
+                { classrooms ? classrooms.filter(classroom => classroom.title && classroom.videoUrl).map((classroom) =>
+                  (<Col span={6} offset={0}>
+                    <ClassCard url={classroom.videoUrl} title={classroom.title} description={classroom.description} classCode={classroom.classCode} />
+                  </Col>
+                  )) : mull }
               </Row>
             </div>
           </div>

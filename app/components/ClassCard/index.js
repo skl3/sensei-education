@@ -5,32 +5,30 @@
 */
 
 import React from 'react';
+import { Card } from 'antd';
 // import styled from 'styled-components';
 
 
 function ClassCard(props) {
   return (
-    <div style={{width: "250px", minHeight: "350px",
-                 backgroundColor: "white", paddingLeft: "10px",
-                 paddingRight: "10px", paddingTop: "10px",
-                 paddingBottom: "10px", textAlign: "center",
-                 border: "1px solid black",}}>
-      <div style={{paddingBottom: 15}}>
-        <iframe width="225" height="200" src={props.url}
-          frameborder="0" allowfullscreen></iframe>
+    <a href={`/webcam/${props.classCode}`}>
+    <Card style={{ width: 240 }} bodyStyle={{ padding: 0 }}>
+      <div style={{display: 'block'}}>
+        <iframe
+          width="100%" src={props.url}
+          frameborder="0" allowfullscreen>
+        </iframe>
       </div>
-      <div style={{paddingBottom: 10}}>
-        <h2>{props.title}</h2>
+      <div style={{padding: '10px 16px'}}>
+        <h3>{props.title}</h3>
+        <p style={{color: "#999"}}>{props.description}</p>
       </div>
-      <p>{props.description}</p>
-    </div>
+    </Card>
+    </a>
   );
 }
 
 ClassCard.propTypes = {
-  url: String,
-  title: String,
-  description: String,
 };
 
 export default ClassCard;
