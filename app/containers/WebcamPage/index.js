@@ -11,7 +11,6 @@ import Helmet from 'react-helmet';
 import { Row, Col, Button, Tag } from 'antd'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Row, Col } from 'antd';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid,
          Line, Legend, Label, LabelList, Brush } from 'recharts';
 
@@ -98,7 +97,6 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           ]}
         />
         <div>
-          <div>Classroom: { JSON.stringify(classroom) }</div>
           <div style={{width: '100%', marginLeft: 'auto',
                        marginRight: 'auto', paddingLeft: '30px',
                        paddingRight: '30px', paddingTop: '20px',
@@ -136,11 +134,12 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                          marginRight: 'auto', paddingLeft: '30px',
                          paddingRight: '30px', paddingTop: '20px',
                          paddingBottom: '20px', border: '2px solid #DCDCDC'}}>
-              <h2>{classroom.title}</h2>
+              <h2>{classroom ? classroom.title : 'Untitled No.1'}</h2>
               <br />
-              <div>{ classroom.tags.map((tag, i) => (<Tag key={`${i}-tag`}>{tag}</Tag>))}</div>
+              <div>{
+                (classroom && classroom.tags) ? classroom.tags.map((tag, i) => (<Tag key={`${i}-tag`}>{tag}</Tag>)) : null}</div>
               <br />
-              <p style={{fontSize: '15px'}}>{classroom.description}</p>
+              <p style={{fontSize: '15px'}}>{classroom ? classroom.description : 'Lorem Ipsum...'}</p>
             </div>
           </div>
           <div>
