@@ -4,25 +4,26 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 
 import { RECORD_VIDEO_IMAGE } from './constants';
 import { videoImageRecorded, recordVideoImageError } from './actions';
+import request from 'utils/request';
 
-export function* recordVideoData(action) {
+export function* recordVideoImage(action) {
   try {
   	const { code, data } = action;
+    console.log({ code, data }, '/api/classrooms/' + code + '/images');
     const response = yield call(request, '/api/classrooms/' + code + '/images', {
     	method: 'POST',
-    	headers: {
-    		'Content-Type': 'application/json',
-    	},
-    	data: JSON.stringify(data),
+    	headers: { 'Content-Type': 'application/json' },
+    	body: JSON.stringify(data),
     });
+    console.log(response, 'response');
     yield put(videoDataRecorded());
   } catch (err) {
-    yield put(recordVideoDataError(err));
+    yield put(recordVideoImageError(err));
   }
 }
 
 export function* getWebcamWatcher() {
-  yield fork(takeLatest, RECORD_VIDEO_DATA, recordVideoData);
+  yield fork(takeLatest, RECORD_VIDEO_IMAGE, recordVideoImage);
 }
 
 export function* webcamSaga() {
