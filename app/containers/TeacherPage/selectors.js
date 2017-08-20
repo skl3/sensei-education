@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the teacherPage state domain
  */
-const selectTeacherPageDomain = () => (state) => state.get('teacherPage');
+const selectTeacherPageDomain = () => (state) => state.get('teacher');
 
 /**
  * Other specific selectors
@@ -18,9 +18,9 @@ const selectLoadingClassroom = () => createSelector(
   (teacherPageDomain) => teacherPageDomain.get('loadingClassroom')
 );
 
-const selectLoadingSessions = () => createSelector(
+const selectLoadingSession = () => createSelector(
   selectTeacherPageDomain(),
-  (teacherPageDomain) => teacherPageDomain.get('loadingSessions')
+  (teacherPageDomain) => teacherPageDomain.get('loadingSession')
 );
 
 const selectClassroom = () => createSelector(

@@ -7,6 +7,7 @@
 import _ from 'lodash';
 import { fromJS } from 'immutable';
 import {
+  UPDATE_CLASSROOM_VALUE,
   UPDATE_CLASSROOM,
   UPDATE_CLASSROOM_SUCCESS,
   UPDATE_CLASSROOM_ERROR,
@@ -19,21 +20,25 @@ import {
 } from './constants';
 
 const initialState = fromJS({
+  updatingClassroom: false,
   loadingClassroom: true,
-  loadingSession: true,
+  loadingSession: false,
   classroom: false,
   sessions: false,
 });
 
 function teacherPageReducer(state = initialState, action) {
   switch (action.type) {
+    case UPDATE_CLASSROOM_VALUE:
+      return state
+        .set('classroom', state.get('classroom') ?
+          Object.assign({}, state.get('classroom'), { [action.key]: action.value }) : null);
     case UPDATE_CLASSROOM:
       return state
         .set('updatingClassroom', true);
     case UPDATE_CLASSROOM_SUCCESS:
       return state
-        .set('updatingClassroom', false)
-        .set('classroom', action.classroom);
+        .set('updatingClassroom', false);
     case UPDATE_CLASSROOM_ERROR:
       return state
         .set('updatingClassroom', false);

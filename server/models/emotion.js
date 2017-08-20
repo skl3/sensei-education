@@ -13,6 +13,7 @@ const emotionSchema = new Schema({
   sessionId: Number,
   createdAt: { type: Date, default: Date.now },
   sessionId: { type: ObjectId, ref: 'Session' }, // todo: might remove
+  videoTs: Number,
 });
 
 module.exports = mongoose.model('Emotion', emotionSchema);

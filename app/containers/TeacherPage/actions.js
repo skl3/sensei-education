@@ -5,6 +5,7 @@
  */
 
 import {
+  UPDATE_CLASSROOM_VALUE,
   UPDATE_CLASSROOM,
   UPDATE_CLASSROOM_SUCCESS,
   UPDATE_CLASSROOM_ERROR,
@@ -16,6 +17,14 @@ import {
   QUERY_SESSION_ERROR,
 } from './constants';
 
+export function updateClassroomValue(key, value) {
+  return {
+    type: UPDATE_CLASSROOM_VALUE,
+    key,
+    value,
+  };
+}
+
 export function updateClassroom(id, classroom) {
   return {
     type: UPDATE_CLASSROOM,
@@ -24,10 +33,10 @@ export function updateClassroom(id, classroom) {
   };
 }
 
-export function classroomUpdated(updatedClassroom) {
+export function classroomUpdated(classroom) {
   return {
     type: UPDATE_CLASSROOM_SUCCESS,
-    updatedClassroom,
+    classroom,
   };
 }
 

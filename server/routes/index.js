@@ -39,7 +39,10 @@ router.get('/classrooms/public', (req, res, next) => {
 
 // create classroom
 router.post('/classrooms', (req, res, next) => {
-  return new Classroom({ shortCode: shortid.generate() })
+  return new Classroom({
+    shortCode: shortid.generate(),
+    classCode: shortid.generate(),
+  })
     .save()
     .then(createdClassroom => res.status(200).json(createdClassroom))
     .catch(err => {
@@ -48,20 +51,22 @@ router.post('/classrooms', (req, res, next) => {
     });
 });
 
-// update classroom information
+// update classroom information - WEIRD fetch lib thing, not passing body
 router.patch('/classrooms/:id', (req, res, next) => {
   const { id } = req.params;
-  const { title, description, tags, isPublic } = req.body;
-  return Classroom.findOneAndUpdate({ id }, {
+  const { title, description, videoUrl, tags, isPublic } = req.body;
+  return Classroom.findOneAndUpdate({ _id: id }, {
     title,
     description,
+    videoUrl,
     tags,
     isPublic,
-  }).then(updatedClassroom => res.status(200).json(updatedClassroom))
-    .catch(err => {
-      console.error("Classroom update error: ", err);
-      throw new Error("Classroom update error: ", err);
-    });
+  }).then(updatedClassroom => {
+    return res.status(200).json(updatedClassroom);
+  }).catch(err => {
+    console.error("Classroom update error: ", err);
+    throw new Error("Classroom update error: ", err);
+  });
 });
 
 // TODO: [WIP] post image for classroom
@@ -170,10 +175,7 @@ router.get('/classrooms/:id', (req, res, next) => {
         model: 'Emotion'
       }
     })
-    .then(classroom => {
-      console.log(classroom, 'classroom server');
-      return res.status(200).json(classroom);
-    })
+    .then(classroom => res.status(200).json(classroom))
     .catch(err => {
       console.error("Error getting classroom for analytics", err);
       throw new Error("Error getting classroom for analytics", err);
