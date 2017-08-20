@@ -91,7 +91,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
         />
         <div style={titleContainerStyle}>
           <div style={rowDescriptionStyle}>
-            <h1 style={{fontFamily: 'Montserrat', fontSize: 40, color: 'white'}}>Welcome to SentiSchool</h1>
+            <h1 style={{fontFamily: 'Montserrat', fontSize: 40, color: 'white'}}>Welcome to Sensei</h1>
             <div style={{paddingTop: '15px'}}>
               <p style={{fontFamily: 'Montserrat', fontSize: 25, color: 'white'}}>
                 Using Artificial Intelligence to Improve Student Engagement in Online Courses
@@ -133,7 +133,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
               <h2 style={{fontFamily: 'Montserrat', fontSize: 25}}>Are you an Instructor?</h2>
               <br />
               <p style={{fontFamily: 'Montserrat', fontSize: 15, textAlign: 'left'}}>
-                <b>Create a classroom</b> to start streaming content to your students. SentiSchool
+                <b>Create a classroom</b> to start streaming content to your students. Sensei
                 will collect data on each students engagement and summarize it on the
                 course home page.
               </p>
@@ -198,7 +198,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
                     <h2 style={{fontFamily: 'Montserrat', fontSize: 20}}>Deep Learning Models</h2>
                     <br />
                     <p style={{fontFamily: 'Montserrat', fontSize: 18}}>
-                      SentiSchool uses state-of-the-art deep learning models to predict 1 of 7 emotions
+                      Sensei uses state-of-the-art deep learning models to predict 1 of 7 emotions
                       that are correlated to student engagement.
                     </p>
                   </div>
@@ -222,7 +222,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
         </div>
         <hr color="#DCDCDC" />
         <div style={footerContainerStyle}>
-          <h2 style={{color: "grey", fontSize: "15px"}}>SentiSchool. Copyright © 2017. All Rights Reserved.</h2>
+          <h2 style={{color: "grey", fontSize: "15px"}}>Sensei. Copyright © 2017. All Rights Reserved.</h2>
         </div>
       </div>
     );

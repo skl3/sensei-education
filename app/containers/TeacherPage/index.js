@@ -380,7 +380,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         </div>
         <hr color="#DCDCDC" />
         <div style={footerContainerStyle}>
-          <h2 style={{color: "grey", fontSize: "15px"}}>SentiSchool. Copyright © 2017. All Rights Reserved.</h2>
+          <h2 style={{color: "grey", fontSize: "15px"}}>Sensei. Copyright © 2017. All Rights Reserved.</h2>
         </div>
       </div>
     );

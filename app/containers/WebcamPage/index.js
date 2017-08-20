@@ -108,7 +108,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           }}>
             <div>
               <p style={{fontSize: '15px'}}>
-                <b>Disclaimer:</b> SentiSchool will use data from your webcam to estimate
+                <b>Disclaimer:</b> Sensei will use data from your webcam to estimate
                 engagement. This data will only be shared with the content creater in an effort
                 to make content more personalized and more relevant to you. Your data will not be
                 used in any other way. To <b>opt-out</b>, block camera access via the browser.
@@ -230,7 +230,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
         </div>
         <hr color="#DCDCDC" />
         <div style={footerContainerStyle}>
-          <h2 style={{color: "grey", fontSize: "15px"}}>SentiSchool. Copyright © 2017. All Rights Reserved.</h2>
+          <h2 style={{color: "grey", fontSize: "15px"}}>Sensei. Copyright © 2017. All Rights Reserved.</h2>
         </div>
       </div>
     );
