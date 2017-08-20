@@ -59,7 +59,6 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       backgroundColor: '#2BA8C6',
     }
     const footerContainerStyle = {
-      backgroundColor: '#2BA8C6',
       paddingRight: '15px',
       paddingLeft: '15px',
       marginRight: 'auto',
@@ -177,8 +176,9 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
             </div>
           </div>
         </div>
+        <hr color="#DCDCDC" />
         <div style={footerContainerStyle}>
-          <h2 style={{color: "white", fontSize: "15px"}}>SentiSchool. Copyright © 2017. All Rights Reserved.</h2>
+          <h2 style={{color: "grey", fontSize: "15px"}}>SentiSchool. Copyright © 2017. All Rights Reserved.</h2>
         </div>
       </div>
     );
