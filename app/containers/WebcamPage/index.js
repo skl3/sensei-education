@@ -24,6 +24,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     super(props);
     this.state = {
       isPlaying: false,
+      videoLength: 100,
       sessionId: '',
     };
   }
@@ -39,6 +40,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
 
   capture() {
     const { sessionId, player, code } = this.state;
+    this.setState({videoLength: player.getDuration()})
     const imageSrc = this.webcam.getScreenshot();
     const secondsPlayed = player.getCurrentTime();
     this.props.onSendImage(code, imageSrc, secondsPlayed, sessionId);
@@ -157,7 +159,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
               <div className='line-chart-wrapper' key='item' style={{marginTop: '30px'}}>
                 <LineChart width={700} height={200} data={[]} syncId="test">
                   <CartesianGrid stroke='#f5f5f5' fill="white" />
-                  <XAxis type="number" domain={[0, 100]} dataKey="time" height={40}>
+                  <XAxis type="number" domain={[0, this.state.videoLength]} dataKey="time" height={40}>
                     <Label value="Time (Seconds)" />
                   </XAxis>
                   <YAxis type="number" domain={[0, 100]}>
