@@ -32,11 +32,11 @@ export class Header extends React.PureComponent {
         onClick={this.handleClick}
         selectedKeys={[this.state.current]}
         mode="horizontal"
-        theme="dark"
+        theme="light"
         style={{ padding: '0 15px' }}
       >
         <span style={{ float: 'left', fontSize: '20px', marginRight: '20px' }}>
-          <span style={{ color: '#3F93EB' }}>senti</span>
+          <span style={{ color: '#2BA8C6' }}>senti</span>
           <span>school</span>
         </span>
 

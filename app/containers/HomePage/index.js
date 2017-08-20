@@ -40,14 +40,27 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
 
   render() {
     const InputGroup = Input.Group;
-    const containerStyle = {
+    const classContainerStyle = {
       paddingRight: '15px',
       paddingLeft: '15px',
       marginRight: 'auto',
       marginLeft: 'auto',
-      marginTop: '30px',
-      width: '970px',
-    };
+      paddingTop: '50px',
+      paddingBottom: '50px',
+    }
+    const titleContainerStyle = {
+      paddingRight: '15px',
+      paddingLeft: '15px',
+      marginRight: 'auto',
+      marginLeft: 'auto',
+      paddingTop: '100px',
+      paddingBottom: '100px',
+      backgroundColor: '#2BA8C6',
+    }
+    const rowDescriptionStyle = {
+      paddingRight: '30px',
+      paddingLeft: '30px',
+    }
     return (
       <div>
         <Helmet
@@ -56,10 +69,31 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
             { name: 'description', content: 'Description of Home' },
           ]}
         />
-        <div style={containerStyle}>
+        <div style={titleContainerStyle}>
           <Row>
-            <Col span={8} offset={8} style={{ textAlign: 'center' }}>
-              <h3>Join a Classroom!</h3>
+            <div style={rowDescriptionStyle}>
+              <h1 style={{fontFamily: 'Montserrat', fontSize: 40, color: 'white'}}>Welcome to SentiSchool</h1>
+              <div style={{paddingTop: '15px'}}>
+                <p style={{fontFamily: 'Montserrat', fontSize: 25, color: 'white'}}>
+                  Using Artificial Intelligence to Improve Student Engagement in Online Courses
+                </p>
+              </div>
+            </div>
+          </Row>
+        </div>
+        <hr />
+        <div style={classContainerStyle}>
+          <Row>
+            <Col span={9} offset={2} style={{ textAlign: 'center', paddingTop: '30px' }}>
+              <div style={{paddingBottom: '20px'}}>
+                <img src={require('images/student.png')} height="150" />
+              </div>
+              <h2 style={{fontFamily: 'Montserrat', fontSize: 25}}>Are you a Student?</h2>
+              <br />
+              <p style={{fontFamily: 'Montserrat', fontSize: 15, textAlign: 'left'}}>
+                <b>Get started now!</b> If you have a classroom code, enter it below. Otherwise,
+                check out the open courses in the <b>Explore</b> section.
+              </p>
               <br />
               <InputGroup>
                 <Input
@@ -75,14 +109,22 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
                 </div>
               </InputGroup>
             </Col>
-          </Row>
-          <br />
-          <Row style={{ textAlign: 'center' }}>
-            <h2>OR</h2>
-            <br />
-            <Button type="primary" size="large" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>
-              Generate a Classroom!
-            </Button>
+            <Col span={10} offset={2} style={{ textAlign: 'center', paddingTop: '30px' }}>
+              <div style={{paddingBottom: '20px'}}>
+                <img src={require('images/teacher.png')} height="150" />
+              </div>
+              <h2 style={{fontFamily: 'Montserrat', fontSize: 25}}>Are you a Instructor?</h2>
+              <br />
+              <p style={{fontFamily: 'Montserrat', fontSize: 15, textAlign: 'left'}}>
+                <b>Create a classroom</b> to start streaming content to your students. SentiSchool
+                will collect data on each student's engagement and summarize it on the
+                course home page.
+              </p>
+              <br />
+              <Button type="primary" size="large" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>
+                Create a Classroom!
+              </Button>
+            </Col>
           </Row>
         </div>
       </div>
