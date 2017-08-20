@@ -174,7 +174,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
                   (<Col span={6} offset={0}>
                     <ClassCard url={classroom.videoUrl} title={classroom.title} description={classroom.description} classCode={classroom.classCode} />
                   </Col>
-                  )) : mull }
+                )) : null }
               </Row>
             </div>
           </div>
