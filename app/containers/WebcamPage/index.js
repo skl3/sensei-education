@@ -26,6 +26,12 @@ const generateUUID = () => {
   });
 };
 
+const getVideoIdFromUrl = (url) => {
+  if (!url) return;
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[7].length == 11) ? match[7] : false;
+};
 
 export class WebcamPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -117,7 +123,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           </div>
           <div style={youtubeStyle} ref="youtubeObject">
             <YouTube
-              videoId={'Nw9XeCkxm50'}
+              videoId={getVideoIdFromUrl(classroom.videoUrl)}
               onReady={this.onReady}
               onStateChange={this.onStateChange}
               opts={{width: '800', height: '550'}}

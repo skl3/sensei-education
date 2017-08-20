@@ -317,10 +317,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
                   <br />
                   <h2 style={{fontFamily: 'Montserrat', fontSize: '15'}}>Share Link</h2>
                   <InputGroup style={{ marginTop: '10px' }}>
-                    <Input
-                      value={classroom ? `${window.location.origin}/webcam/${classroom.classCode}` : ""}
-                      disabled={true}
-                    />
+                    <Input value={classroom ? `${window.location.origin}/webcam/${classroom.classCode}` : ""} />
                     <div className="ant-input-group-wrap">
                       <Button icon="copy" onClick={(e) => this.handleCopy(e, classroom.classCode)} />
                     </div>
