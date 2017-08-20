@@ -72,7 +72,7 @@ router.patch('/classrooms/:id', (req, res, next) => {
 // TODO: [WIP] post image for classroom
 router.post('/classrooms/:id/images', (req, res, next) => {
   const classroomId = req.params.id;
-  const { sessionId, encodedImage } = req.body; // sessionId and encodedImage inside req body
+  const { sessionId, encodedImage, videoTs } = req.body; // sessionId and encodedImage inside req body
   // determine whether there is a new session
   return Session.find({ id: sessionId })
     .then(session => {

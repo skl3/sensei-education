@@ -1,11 +1,36 @@
-// import { take, call, put, select } from 'redux-saga/effects';
+import { takeLatest } from 'redux-saga';
+import { take, call, put, fork, select, cancel } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
-// Individual exports for testing
-export function* defaultSaga() {
-  // See example in containers/HomePage/sagas.js
+import { RECORD_VIDEO_IMAGE } from './constants';
+import { videoImageRecorded, recordVideoImageError } from './actions';
+
+export function* recordVideoData(action) {
+  try {
+  	const { code, data } = action;
+    const response = yield call(request, '/api/classrooms/' + code + '/images', {
+    	method: 'POST',
+    	headers: {
+    		'Content-Type': 'application/json',
+    	},
+    	data: JSON.stringify(data),
+    });
+    yield put(videoDataRecorded());
+  } catch (err) {
+    yield put(recordVideoDataError(err));
+  }
 }
 
-// All sagas to be loaded
+export function* getWebcamWatcher() {
+  yield fork(takeLatest, RECORD_VIDEO_DATA, recordVideoData);
+}
+
+export function* webcamSaga() {
+  const getWatcher = yield fork(getWebcamWatcher);
+  yield take(LOCATION_CHANGE);
+  yield cancel(getWatcher);
+}
+
 export default [
-  defaultSaga,
+  webcamSaga,
 ];

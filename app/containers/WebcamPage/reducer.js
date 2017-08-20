@@ -6,15 +6,17 @@
 
 import { fromJS } from 'immutable';
 import {
-  DEFAULT_ACTION,
+  // RECORD_VIDEO_IMAGE,
+  // RECORD_VIDEO_IMAGE_SUCCESS,
+  // RECORD_VIDEO_IMAGE_ERROR,
 } from './constants';
 
-const initialState = fromJS({});
+const initialState = fromJS({
+
+});
 
 function webcamPageReducer(state = initialState, action) {
   switch (action.type) {
-    case DEFAULT_ACTION:
-      return state;
     default:
       return state;
   }

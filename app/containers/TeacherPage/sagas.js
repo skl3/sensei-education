@@ -16,14 +16,14 @@ import request from 'utils/request';
 
 export function* updateClassroom(action) {
   try {
-    const { title, description, videoUrl, tags, isPublic } = action.classroom;
+    const { classroom, id } = action;
+    const { title, description, videoUrl, tags, isPublic } = classroom;
     const updateBody = { title, description, videoUrl, isPublic, tags };
-    const response = yield call(request, '/api/classrooms/' + action.id, {
+    const response = yield call(request, '/api/classrooms/' + id, {
       method: "PATCH",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updateBody),
     });
-    console.log(response, 'update response');
     yield put(classroomUpdated(response));
   } catch (err) {
     yield put(updateClassroomError(err));
