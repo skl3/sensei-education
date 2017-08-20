@@ -15,7 +15,7 @@ const Session = require('../models/session');
 
 // Other APIs
 const TRUEFACE_API = 'https://api.chui.ai/v1';
-const TRUEFACE_API_KEY = 'h1itnXrydBa4cN1wxdjSs60i31Cmx1I41Q32GkIP';
+const TRUEFACE_API_KEY = process.env.TRUEFACE_API_KEY || 'h1itnXrydBa4cN1wxdjSs60i31Cmx1I41Q32GkIP';
 const FACE2EMOTION_API = 'https://face2emotionapp.herokuapp.com/predict';
 
 // TODO: improve this endpoint to search on title and description as well
