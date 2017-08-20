@@ -2,9 +2,23 @@ import { takeLatest } from 'redux-saga';
 import { take, call, put, fork, select, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import { RECORD_VIDEO_IMAGE } from './constants';
-import { videoImageRecorded, recordVideoImageError } from './actions';
+import { QUERY_CLASSROOM, RECORD_VIDEO_IMAGE } from './constants';
+import {
+  classroomQueried, queryClassroomError,
+  videoImageRecorded, recordVideoImageError,
+} from './actions';
 import request from 'utils/request';
+
+
+export function* fetchClassroom(action) {
+  try {
+    const { classCode } = action;
+    const response = yield call(request, '/api/classrooms/' + classCode + '/code');
+    yield put(classroomQueried(response));
+  } catch (err) {
+    yield put(queryClassroomError(err));
+  }
+}
 
 export function* recordVideoImage(action) {
   try {
@@ -23,6 +37,7 @@ export function* recordVideoImage(action) {
 
 export function* getWebcamWatcher() {
   yield fork(takeLatest, RECORD_VIDEO_IMAGE, recordVideoImage);
+  yield fork(takeLatest, QUERY_CLASSROOM, fetchClassroom);
 }
 
 export function* webcamSaga() {
