@@ -39,7 +39,7 @@ export function* fetchClassroom(action) {
 export function* recordVideoImage(action) {
   try {
   	const { code, data } = action;
-    console.log({ code, data });
+    console.log({ code });
     const emotion = yield call(request, '/api/classrooms/' + code + '/images', {
     	method: 'POST',
     	headers: { 'Content-Type': 'application/json' },

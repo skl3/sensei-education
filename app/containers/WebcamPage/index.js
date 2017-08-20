@@ -54,7 +54,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
 
   capture() {
     const { sessionId, player, code } = this.state;
-    this.setState({videoLength: player.getDuration()})
+    this.setState({videoLength: player.getCurrentTime() + 10})
     const imageSrc = this.webcam.getScreenshot();
     const secondsPlayed = player.getCurrentTime();
     this.props.onSendImage(code, imageSrc, secondsPlayed, sessionId);
@@ -66,7 +66,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
       if (this.state.isPlaying == true) {
         this.capture();
       }
-    }.bind(this), 3000);
+    }.bind(this), 4000);
   }
 
   onStateChange = (event) => {
@@ -117,7 +117,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           </div>
           <div style={youtubeStyle} ref="youtubeObject">
             <YouTube
-              videoId={'F9z_3obVjFs'}
+              videoId={'Nw9XeCkxm50'}
               onReady={this.onReady}
               onStateChange={this.onStateChange}
               opts={{width: '800', height: '550'}}

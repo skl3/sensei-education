@@ -33,6 +33,15 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
     this.props.onFetchClassroomAnalytics(this.props.params.id);
   }
 
+  handleCopy = (e, classCode) => {
+    const textField = document.createElement('textarea');
+    textField.innerText = `${window.location.origin}/webcam/${classCode}`;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand('copy');
+    textField.remove();
+  }
+
   onClearTagInput() {
     this.setState({ tagInput: "" });
   }
@@ -101,6 +110,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
   }
 
   genAvgLineChart(data) {
+    if (!data) return;
     let _avg_data = {};
     let n_data = data.length;
     let _avg_keys = [];
@@ -108,8 +118,8 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
       let curdata = data[i];
       let n_timesteps = curdata.length;
       for (var j = 0; j < n_timesteps; j++) {
-        if (!(curdata[j]['time'] in _avg_data)) {
-          _avg_data[curdata[j]['time']] = {
+        if (!(curdata[j]['videoTs'] in _avg_data)) {
+          _avg_data[curdata[j]['videoTs']] = {
             "sad": curdata[j]["sad"],
             "happy": curdata[j]["happy"],
             "neutral": curdata[j]["neutral"],
@@ -120,8 +130,8 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
             "num_instances": 1,
           };
         } else {
-          let old_data = _avg_data[curdata[j]['time']];
-          _avg_data[curdata[j]['time']] = {
+          let old_data = _avg_data[curdata[j]['videoTs']];
+          _avg_data[curdata[j]['videoTs']] = {
             "sad": curdata[j]["sad"] + old_data["sad"],
             "happy": curdata[j]["happy"] + old_data["happy"],
             "neutral": curdata[j]["neutral"] + old_data["neutral"],
@@ -132,17 +142,16 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
             "num_instances": old_data["num_instances"] + 1,
           }
         }
-        _avg_keys.push(curdata[j]['time']);
+        _avg_keys.push(curdata[j]['videoTs']);
       }
     }
-    console.log(_avg_keys);
     _avg_keys = [...new Set(_avg_keys)];
     _avg_keys = _avg_keys.sort();
 
     let avg_data = [];
     _avg_keys.forEach(function(i) {
       avg_data.push({
-        "time": i,
+        "videoTs": i,
         "sad": _avg_data[i]["sad"] / _avg_data[i]["num_instances"],
         "happy": _avg_data[i]["happy"] / _avg_data[i]["num_instances"],
         "neutral": _avg_data[i]["neutral"] / _avg_data[i]["num_instances"],
@@ -153,6 +162,8 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
       });
     });
 
+    avg_data = avg_data.sort((a, b) => a.videoTs - b.videoTs);
+
     return (
       <div className='avg-line-chart-wrapper'
         style={{paddingTop: '20px', paddingBottom: '20px'}}>
@@ -161,7 +172,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
           style={{marginLeft: 'auto', marginRight: 'auto'}}
         >
           <CartesianGrid stroke='#f5f5f5' fill="white" />
-          <XAxis type="number" dataKey="time" height={40} label="Time" />
+          <XAxis type="number" dataKey="videoTs" height={40} label="Time" />
           <YAxis type="number" domain={[0, 1]}>
             <Label value="Emotion Probability" angle={270} />
           </YAxis>
@@ -304,16 +315,14 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
                     </div>
                   </InputGroup>) : <p style={{ fontFamily: 'Montserrat', fontSize: '12px'}}>No tags found.</p> }
                   <br />
-                  <h2 style={{fontFamily: 'Montserrat', fontSize: '15'}}>Send Link</h2>
+                  <h2 style={{fontFamily: 'Montserrat', fontSize: '15'}}>Share Link</h2>
                   <InputGroup style={{ marginTop: '10px' }}>
                     <Input
-                      value={`/webcam/${classroom.classCode}`}
+                      value={classroom ? `${window.location.origin}/webcam/${classroom.classCode}` : ""}
                       disabled={true}
                     />
                     <div className="ant-input-group-wrap">
-                      <Button icon="copy" onClick={(e) => {
-                        e.clipboardData.setData('text/plain', '/webcam/' + classroom.classCode);
-                      }} />
+                      <Button icon="copy" onClick={(e) => this.handleCopy(e, classroom.classCode)} />
                     </div>
                   </InputGroup>
               </Col>

@@ -194,6 +194,7 @@ function updateSessionWithNewImage(sessionId, encodedImage, videoTs, res) {
           }
           // console.log(body, 'response from face2emotion'); // should be a map
           const emotionsMap = body.data[0]; // TODO: support multiple predictions
+          console.log(emotionsMap, 'emotionsmap');
           const { angry, disgust, fear, happy, sad, surprise, neutral } = emotionsMap;
           return new Emotion({
             angry,
