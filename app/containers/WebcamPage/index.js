@@ -18,8 +18,19 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     super(props);
     this.state = {
       imageTaken: '',
+      isPlaying: false,
+      sessionId: '',
     };
+    this.sendData = this.sendData.bind(this);
 
+  }
+
+  componentDidMount() {
+    this.generateUUID.bind(this);
+    let uuid = this.generateUUID();
+    this.setState({
+      sessionId: uuid
+    });
   }
 
   setRef = (webcam) => {
@@ -31,15 +42,51 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     this.setState({
       imageTaken: imageSrc,
     });
-    let secondsPlayed = this.state.player.getCurrentTime();
-    console.log(secondsPlayed)
+    const secondsPlayed = this.state.player.getCurrentTime();
+    this.sendData(imageSrc, secondsPlayed)
+  }
+
+  sendData(image, secondsPlayed) {
+    let data = {
+      'secondsPlayed': secondsPlayed,
+      'image': image,
+      'sessionId': this.state.sessionId
+    }
+    console.log(data);
   }
 
   onReady = (event) => {
     this.setState({
       player: event.target
     })
+    setInterval(function() {
+      if (this.state.isPlaying == true) {
+        this.capture()
+      }
+    }.bind(this), 3000);
   }
+
+  onStateChange = (event) => {
+    let isPlaying;
+    if (event.data == 1) {
+      isPlaying = true
+    } else {
+      isPlaying = false
+    }
+    this.setState({
+      isPlaying: isPlaying
+    })
+  }
+
+  generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  };
 
   render() {
     const containerStyle = {
@@ -60,7 +107,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
         />
         <div style={containerStyle}>
           <h1>Webcam</h1>
-          <YouTube videoId={'F9z_3obVjFs'} onReady={this.onReady} />
+          <YouTube videoId={'F9z_3obVjFs'} onReady={this.onReady} onStateChange={this.onStateChange}/>
           <div>
             <Webcam
               audio={false}
