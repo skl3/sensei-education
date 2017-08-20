@@ -26,7 +26,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
 
   capture() {
     const imageSrc = this.webcam.getScreenshot();
-    console.log('image captured');
+    console.log('image captured', imageSrc);
     this.setState({
       imageTaken: imageSrc,
     });
@@ -54,10 +54,10 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           <div>
             <Webcam
               audio={false}
+              width={350}
               height={350}
               ref={this.setRef}
               screenshotFormat="image/png"
-              width={350}
             />
           </div>
           <Button type="primary" size="large" onClick={this.capture.bind(this)}>Capture photo</Button>

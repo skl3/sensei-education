@@ -1,11 +1,62 @@
-// import { take, call, put, select } from 'redux-saga/effects';
+import { takeLatest } from 'redux-saga';
+import { take, call, put, fork, select, cancel } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  UPDATE_CLASSROOM,
+  QUERY_CLASSROOM,
+  QUERY_SESSION,
+} from './constants';
+import {
+  classroomUpdated, updateClassroomError,
+  classroomQueried, queryClassroomError,
+  sessionQueried, querySessionError,
+} from './actions';
+import request from 'utils/request';
 
-// Individual exports for testing
-export function* defaultSaga() {
-  // See example in containers/HomePage/sagas.js
+
+export function* updateClassroom(action) {
+  try {
+    const response = yield call(request, '/api/classrooms/' + action.id, {
+      method: "PATCH",
+      data: JSON.stringify(action.classroom),
+    });
+    yield put(classroomUpdated(response));
+  } catch (err) {
+    yield put(updateClassroomError(err));
+  }
 }
 
-// All sagas to be loaded
+export function* queryClassroomAnalytics(action) {
+  try {
+    const classroom = yield call(request, '/api/classrooms/' + action.id);
+    yield put(classroomQueried(classroom));
+  } catch (err) {
+    yield put(queryClassroomError(err));
+  }
+}
+
+export function* querySessionAnalytics(action) {
+  try {
+    const session = yield call(request, '/api/sessions/' + action.id);
+    console.log(session, 'search session analytics');
+    yield put(sessionQueried(session));
+  } catch (err) {
+    yield put(querySessionError(err));
+  }
+}
+
+export function* getTeacherWatcher() {
+  yield fork(takeLatest, UPDATE_CLASSROOM, updateClassroom);
+  yield fork(takeLatest, QUERY_CLASSROOM, queryClassroomAnalytics);
+  yield fork(takeLatest, QUERY_SESSION, querySessionAnalytics);
+}
+
+export function* teacherSaga() {
+  const getWatcher = yield fork(getTeacherWatcher);
+  yield take(LOCATION_CHANGE);
+  yield cancel(getWatcher);
+}
+
 export default [
-  defaultSaga,
+  teacherSaga,
 ];
