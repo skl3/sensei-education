@@ -5,13 +5,13 @@
  */
 
 import React, { PropTypes } from 'react';
-import { Row, Col, Input, Button } from 'antd';
+import { Row, Col, Input, Button, Card } from 'antd';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
-import makeSelectHome from './selectors';
-import { generateClassroom, searchClassroom } from './actions';
-import { Card } from 'antd';
+
+import { queryPublicClassrooms, generateClassroom, searchClassroom } from './actions';
+import makeSelectHome, { selectClassrooms, selectLoadingClassrooms } from './selectors';
 
 export class Home extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -20,6 +20,10 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       value: '',
       focus: false,
     };
+  }
+
+  componentDidMount() {
+    this.props.onFetchPublicClassrooms();
   }
 
   handleInputChange = (e) => {
@@ -49,7 +53,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       marginLeft: 'auto',
       paddingTop: '50px',
       paddingBottom: '60px',
-    }
+    };
     const titleContainerStyle = {
       paddingRight: '15px',
       paddingLeft: '15px',
@@ -59,7 +63,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       paddingBottom: '100px',
       background: 'linear-gradient(160deg, #02CCBA 0%, #AA7ECD 100%)',
       // backgroundColor: '#2BA8C6',
-    }
+    };
     const footerContainerStyle = {
       paddingRight: '15px',
       paddingLeft: '15px',
@@ -68,11 +72,13 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       paddingTop: '30px',
       paddingBottom: '30px',
       textAlign: 'center',
-    }
+    };
     const rowDescriptionStyle = {
       paddingRight: '30px',
       paddingLeft: '30px',
-    }
+    };
+
+    const { classrooms, loadingClassrooms } = this.props;
 
     return (
       <div>
@@ -82,6 +88,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
             { name: 'description', content: 'Description of Home' },
           ]}
         />
+        <div>{ JSON.stringify(classrooms) }</div>
         <div style={titleContainerStyle}>
           <div style={rowDescriptionStyle}>
             <h1 style={{fontFamily: 'Montserrat', fontSize: 40, color: 'white'}}>Welcome to SentiSchool</h1>
@@ -115,7 +122,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
                   onPressEnter={this.handleSearch}
                 />
                 <div className="ant-input-group-wrap">
-                  <Button icon="search" onClick={this.handleSearch} />
+                  <Button icon="search" onClick={() => this.props.onSearchClassroom(this.state.value)} />
                 </div>
               </InputGroup>
             </Col>
@@ -123,11 +130,11 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
               <div style={{paddingBottom: '20px'}}>
                 <img src={require('images/teacher.png')} height="150" />
               </div>
-              <h2 style={{fontFamily: 'Montserrat', fontSize: 25}}>Are you a Instructor?</h2>
+              <h2 style={{fontFamily: 'Montserrat', fontSize: 25}}>Are you an Instructor?</h2>
               <br />
               <p style={{fontFamily: 'Montserrat', fontSize: 15, textAlign: 'left'}}>
                 <b>Create a classroom</b> to start streaming content to your students. SentiSchool
-                will collect data on each student's engagement and summarize it on the
+                will collect data on each students engagement and summarize it on the
                 course home page.
               </p>
               <br />
@@ -220,11 +227,16 @@ Home.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   Home: makeSelectHome(),
+  loadingClassrooms: selectLoadingClassrooms(),
+  classrooms: selectClassrooms(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    onFetchPublicClassrooms: () => {
+      dispatch(queryPublicClassrooms());
+    },
     onGenerateClassroom: () => {
       dispatch(generateClassroom());
     },

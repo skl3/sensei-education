@@ -14,10 +14,12 @@ const TRUEFACE_API_KEY = 'h1itnXrydBa4cN1wxdjSs60i31Cmx1I41Q32GkIP';
 const FACE2EMOTION_API = 'https://face2emotionapp.herokuapp.com/predict';
 
 // TODO: improve this endpoint to search on title and description as well
-// query classrooms
+// query classrooms by classCode
 router.get('/classrooms', (req, res, next) => {
-  return Classroom.findOne({ shortCode: req.query.code })
+  console.log('inside here', req.query);
+  return Classroom.findOne({ classCode: req.query.code })
     .then(classroom => {
+      console.log(classroom, 'classroom found');
       return classroom ?
         res.status(200).json(classroom) :
         res.status(404).json({ data: "Not found" })
