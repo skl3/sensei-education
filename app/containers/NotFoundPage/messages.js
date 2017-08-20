@@ -8,6 +8,6 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   header: {
     id: 'app.components.NotFoundPage.header',
-    defaultMessage: '404. Whoops! Are you in the wrong place?',
+    defaultMessage: 'Whoops! Are you in the wrong place?',
   },
 });

@@ -17,10 +17,12 @@ import messages from './messages';
 export default class NotFound extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-        <div style={{width: "800", textAlign: "center", marginLeft: "auto", marginRight: "auto", padding: "100px 20px"}}>
+        <div style={{width: "800", textAlign: "center", marginLeft: "auto", marginRight: "auto", padding: "60px 20px"}}>
+          <h1 style={{ margin: '0 auto 20px auto', fontSize: '4em' }}>404</h1>
             <h1 style={{fontFamily: 'Montserrat'}}>
                 <FormattedMessage {...messages.header} />
             </h1>
+            <img src={require('images/teacher.png')} height="250" style={{ display: 'block', margin: '40px auto' }}/>
         </div>
     );
   }
