@@ -21,8 +21,6 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
       isPlaying: false,
       sessionId: '',
     };
-    this.sendData = this.sendData.bind(this);
-
   }
 
   componentDidMount() {
@@ -43,16 +41,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
       imageTaken: imageSrc,
     });
     const secondsPlayed = this.state.player.getCurrentTime();
-    this.sendData(imageSrc, secondsPlayed)
-  }
-
-  sendData(image, secondsPlayed) {
-    let data = {
-      'secondsPlayed': secondsPlayed,
-      'image': image,
-      'sessionId': this.state.sessionId
-    }
-    console.log(data);
+    this.props.sendData(imageSrc, secondsPlayed)
   }
 
   onReady = (event) => {
@@ -139,7 +128,15 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    // dispatch,
+    sendData: (image, secondsPlayed) => {
+      const data = {
+        'secondsPlayed': secondsPlayed,
+        'image': image,
+        'sessionId': this.state.sessionId
+      }
+      dispatch(recordVideoData(data));
+    }
+
   };
 }
 
