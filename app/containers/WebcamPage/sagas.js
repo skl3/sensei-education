@@ -9,7 +9,6 @@ import request from 'utils/request';
 export function* recordVideoImage(action) {
   try {
   	const { code, data } = action;
-    console.log({ code, data }, '/api/classrooms/' + code + '/images');
     const response = yield call(request, '/api/classrooms/' + code + '/images', {
     	method: 'POST',
     	headers: { 'Content-Type': 'application/json' },

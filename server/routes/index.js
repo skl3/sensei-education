@@ -72,7 +72,9 @@ router.patch('/classrooms/:id', (req, res, next) => {
 // TODO: [WIP] post image for classroom
 router.post('/classrooms/:id/images', (req, res, next) => {
   const classroomCode = req.params.id;
+  console.log(req.body);
   const { sessionId, encodedImage, videoTs } = req.body; // sessionId and encodedImage inside req body
+  console.log(videoTs, 'videots');
   // determine whether there is a new session
   return Session.findOne({ sessionId })
     .then(session => {
@@ -84,7 +86,8 @@ router.post('/classrooms/:id/images', (req, res, next) => {
             // update classroom with new session
             return Classroom.findOneAndUpdate({ classCode: classroomCode })
               .then(updatedClassroom => {
-                const emotionPredictions = updateSessionWithNewImage(sessionId, encodedImage);
+                const emotionPredictions = updateSessionWithNewImage(
+                  sessionId, encodedImage, videoTs);
                 return res.status(200).json(emotionPredictions); // TODO: format response data
               })
               .catch(err => {
@@ -97,7 +100,8 @@ router.post('/classrooms/:id/images', (req, res, next) => {
             throw new Error("New session created error: ", err);
           });
       } else {
-        const emotionPredictions = updateSessionWithNewImage(sessionId, encodedImage);
+        const emotionPredictions = updateSessionWithNewImage(
+          sessionId, encodedImage, videoTs);
         return res.status(200).json(emotionPredictions); // TODO: format response data
       }
     })
@@ -108,7 +112,7 @@ router.post('/classrooms/:id/images', (req, res, next) => {
 });
 
 // update session with new image
-function updateSessionWithNewImage(sessionId, encodedImage) {
+function updateSessionWithNewImage(sessionId, encodedImage, videoTs) {
   return Session.findOneAndUpdate({ sessionId }, { $push: { images: encodedImage }})
     .then(session => {
       // pass the base64 encoded image to trufaceapi
@@ -126,10 +130,12 @@ function updateSessionWithNewImage(sessionId, encodedImage) {
         // get the cropped coordinates
         if (error) {
           console.error("Error w/ req to trueface: ", error);
+          return { success: false, message: "Error w/ req to Face2Emotion API", error };
           throw new Error("Error w/ req to trueface API: ", error);
         }
         // pass to Mike's NN api
         const { faces, success, msg } =  body;
+        console.log({ faces, success, msg });
         if (!success || msg == 'no face detected') {
           return { success: false, data: "Failed to identify face" };
         }
@@ -147,12 +153,37 @@ function updateSessionWithNewImage(sessionId, encodedImage) {
         return request(face2emotionReqOptions, (error, response, body) => {
           if (error) {
             console.error("Error w/ req to Face2Emotion: ", error);
-            throw new Error("Error w/ req to Face2Emotion API: ", error);
+            return { success: false, message: "Error w/ req to Face2Emotion API", error };
           }
           console.log(body, 'response from face2emotion'); // should be a map
-          const emotionPredictions = response.data;
-          // TODO: save emotion HERE
-          return emotionPredictions;
+          const emotionsMap = body.data[0]; // TODO: support multiple predictions
+          const { angry, disgust, fear, happy, sad, surprise, neutral } = emotionsMap;
+          console.log(sessionId, videoTs);
+          return new Emotion({
+            angry,
+            disgust,
+            fear,
+            happy,
+            sad,
+            surprise,
+            neutral,
+            sessionId: session._id,
+            videoTs,
+          }).save()
+            .then(newEmotion => {
+              console.log(newEmotion, 'new emotion created');
+              return Session.findOneAndUpdate({ sessionId }, { $push: { emotions: newEmotion._id }})
+                .then(sesssion => { success: session ? true : false })
+                .catch(err => {
+                  console.error("Error updating session with encoded image", err);
+                  throw new Error("Error updating session with encoded image", err);
+                });
+            })
+            .catch(err => {
+              console.error("Error with creation emotion prediction");
+              return { success: false, message: "Error with creation emotion prediction", error };
+            });
+
         });
       });
 
