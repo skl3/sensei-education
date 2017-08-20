@@ -57,7 +57,8 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       marginLeft: 'auto',
       paddingTop: '100px',
       paddingBottom: '100px',
-      backgroundColor: '#2BA8C6',
+      background: 'linear-gradient(160deg, #02CCBA 0%, #AA7ECD 100%)',
+      // backgroundColor: '#2BA8C6',
     }
     const footerContainerStyle = {
       paddingRight: '15px',
