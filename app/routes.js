@@ -38,7 +38,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/webcam',
+      path: '/webcam/:id',
       name: 'webcam',
       getComponent(nextState, cb) {
         const importModules = Promise.all([

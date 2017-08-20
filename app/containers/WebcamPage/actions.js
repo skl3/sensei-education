@@ -5,27 +5,28 @@
  */
 
 import {
-  RECORD_VIDEO_DATA,
-  RECORD_VIDEO_DATA_SUCCESS,
-  RECORD_VIDEO_DATA_ERROR,
+  RECORD_VIDEO_IMAGE,
+  RECORD_VIDEO_IMAGE_SUCCESS,
+  RECORD_VIDEO_IMAGE_ERROR,
 } from './constants';
 
-export function recordVideoData(data) {
+export function recordVideoImage(code, data) {
   return {
-    type: RECORD_VIDEO_DATA,
+    type: RECORD_VIDEO_IMAGE,
+    code,
     data,
   };
 }
 
-export function videoDataRecorded() {
+export function videoImageRecorded() {
 	return {
-		type: RECORD_VIDEO_DATA_SUCCESS,
+		type: RECORD_VIDEO_IMAGE_SUCCESS,
 	};
 }
 
-export function recordVideoDataError(error) {
+export function recordVideoImageError(error) {
 	return {
-		type: RECORD_VIDEO_DATA_ERROR,
+		type: RECORD_VIDEO_IMAGE_ERROR,
 		error,
 	};
 }

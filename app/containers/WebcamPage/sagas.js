@@ -2,13 +2,13 @@ import { takeLatest } from 'redux-saga';
 import { take, call, put, fork, select, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import { RECORD_VIDEO_DATA } from './constants';
-import { videoDataRecorded, recordVideoDataError } from './actions';
+import { RECORD_VIDEO_IMAGE } from './constants';
+import { videoImageRecorded, recordVideoImageError } from './actions';
 
 export function* recordVideoData(action) {
   try {
-  	const { id, data } = action;
-    const response = yield call(request, '/api/classrooms/' + id + '/images', {
+  	const { code, data } = action;
+    const response = yield call(request, '/api/classrooms/' + code + '/images', {
     	method: 'POST',
     	headers: {
     		'Content-Type': 'application/json',
