@@ -47,6 +47,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         type="monotone"
         dataKey="sad"
         stroke="#FF0000"
+        strokeWidth="2"
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
       <Line
@@ -54,6 +55,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         type="monotone"
         dataKey="happy"
         stroke="#FFA500"
+        strokeWidth="2"
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
       <Line
@@ -61,6 +63,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         type="monotone"
         dataKey="confused"
         stroke="#800080"
+        strokeWidth="2"
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
       <Line
@@ -68,6 +71,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         type="monotone"
         dataKey="angry"
         stroke="#008000"
+        strokeWidth="2"
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
       <Line
@@ -75,6 +79,7 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
         type="monotone"
         dataKey="disgusted"
         stroke="#0000FF"
+        strokeWidth="2"
         strokeOpacity="0.9"
         strokeDasharray="3 3" />,
     ];
