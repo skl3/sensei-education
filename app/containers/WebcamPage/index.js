@@ -155,7 +155,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                          marginRight: 'auto', paddingLeft: '30px',
                          paddingRight: '30px', paddingTop: '20px',
                          paddingBottom: '20px', border: '2px solid #DCDCDC'}}>
-              <h2>Emotions Summary</h2>
+              <h2>Live Emotions Summary</h2>
               <br />
               <p style={{fontSize: '15px'}}>
                 Discover your own emotions throughout watching the video. The line
