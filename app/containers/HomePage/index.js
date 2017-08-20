@@ -77,7 +77,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
     return (
       <div>
         <Helmet
-          title="Home"
+          title="Home | AI for Education"
           meta={[
             { name: 'description', content: 'Description of Home' },
           ]}
