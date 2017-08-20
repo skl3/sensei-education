@@ -17,9 +17,11 @@ import messages from './messages';
 export default class NotFound extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-      <h1>
-        <FormattedMessage {...messages.header} />
-      </h1>
+        <div style={{width: "800", textAlign: "center", marginLeft: "auto", marginRight: "auto", padding: "100px 20px"}}>
+            <h1 style={{fontFamily: 'Montserrat'}}>
+                <FormattedMessage {...messages.header} />
+            </h1>
+        </div>
     );
   }
 }

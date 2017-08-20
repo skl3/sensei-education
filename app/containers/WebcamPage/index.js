@@ -16,6 +16,7 @@ import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid,
 
 import { createSession, queryClassroom, recordVideoImage } from './actions';
 import makeSelectWebcamPage, { selectEmotions, selectSession, selectLoadingClassroom, selectClassroom } from './selectors';
+import { Menu, Dropdown, Icon } from 'antd';
 
 const generateUUID = () => {
   let d = new Date().getTime();
@@ -79,6 +80,13 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     this.setState({ isPlaying: event.data == 1 });
   }
 
+  openNotification(emotion) {
+    notification.open({
+      message: 'Recorded your Emotion!',
+      description: 'We\'ve recorded that you are ' + emotion + ' and will use that information to better tune our algorithm.',
+    });
+  };
+
   render() {
     const youtubeStyle = {
       background: 'black',
@@ -94,6 +102,32 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
       paddingBottom: '30px',
       textAlign: 'center',
     };
+
+    const dropMenu = (
+      <Menu>
+        <Menu.Item>
+          <a rel="noopener noreferrer" href="#">Angry</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a rel="noopener noreferrer" href="#">Disgust</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a rel="noopener noreferrer" href="#">Fear</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a rel="noopener noreferrer" href="#">Happy</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a rel="noopener noreferrer" href="#">Sad</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a rel="noopener noreferrer" href="#">Surprise</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a rel="noopener noreferrer" href="#">Neutral</a>
+        </Menu.Item>
+      </Menu>
+    );
 
     const { emotions, session, classroom, loadingClassroom } = this.props;
 
@@ -123,12 +157,21 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           </div>
           <div style={youtubeStyle} ref="youtubeObject">
             <YouTube
-              videoId={getVideoIdFromUrl(classroom.videoUrl)}
+              videoId={classroom ? getVideoIdFromUrl(classroom.videoUrl) : ""}
               onReady={this.onReady}
               onStateChange={this.onStateChange}
               opts={{width: '800', height: '550'}}
               width={800}
             />
+            <Dropdown overlay={dropMenu}>
+                <span className="ant-dropdown-link"
+                  style={{color: "black", padding: "10px 10px", background: "#e6e6e6",
+                          fontSize: "15px", position: 'fixed', bottom: 240, right: 35}}>
+                  <p style={{fontFamily: 'Montserrat'}}>
+                    Tell Sensei I'm feeling... <Icon type="down" />
+                  </p>
+                </span>
+            </Dropdown>
             <Webcam
               style={{ position: 'fixed', bottom: 0, right: 0 }}
               audio={false}
