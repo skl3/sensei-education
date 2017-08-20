@@ -107,14 +107,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
               </p>
               <Row>
                 <Col span={5} offset={0}>
-                  <Webcam
-                    style={{ display: 'block' }}
-                    audio={false}
-                    width={200}
-                    height={200}
-                    ref={this.setRef}
-                    screenshotFormat="image/png"
-                  />
+
                 </Col>
                 <Col span={8} offset={0} style={{paddingTop: '30px'}}>
                   <div className='line-chart-wrapper' key='item'>
@@ -173,8 +166,16 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
               videoId={'F9z_3obVjFs'}
               onReady={this.onReady}
               onStateChange={this.onStateChange}
-              opts={{width: '800', height: '500'}}
+              opts={{width: '800', height: '550'}}
               width={800}
+            />
+            <Webcam
+              style={{ position: 'absolute', bottom: 35, right: 0 }}
+              audio={false}
+              width={200}
+              height={200}
+              ref={this.setRef}
+              screenshotFormat="image/png"
             />
           </div>
           <div>
@@ -205,16 +206,15 @@ WebcamPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   // WebcamPage: makeSelectWebcamPage(),
-
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSendImage: (code, image, secondsPlayed, sessionId) => {
+    onSendImage: (code, image, videoTs, sessionId) => {
       const data = {
         encodedImage: image.replace("data:image/png;base64,", ""),
-        sessionId: sessionId,
-        secondsPlayed: secondsPlayed,
+        sessionId,
+        videoTs,
       };
       dispatch(recordVideoImage(code, data));
     },

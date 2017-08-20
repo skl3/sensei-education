@@ -10,7 +10,6 @@ const emotionSchema = new Schema({
   sad: Number,
   surprise: Number,
   neutral: Number,
-  sessionId: Number,
   createdAt: { type: Date, default: Date.now },
   sessionId: { type: ObjectId, ref: 'Session' }, // todo: might remove
   videoTs: Number,
