@@ -4,6 +4,10 @@
  *
  */
 
+export const CREATE_SESSION = 'app/WebcamPage/CREATE_SESSION';
+export const CREATE_SESSION_SUCCESS = 'app/WebcamPage/CREATE_SESSION_SUCCESS';
+export const CREATE_SESSION_ERROR = 'app/WebcamPage/CREATE_SESSION_ERROR';
+
 export const QUERY_CLASSROOM = 'app/WebcamPage/QUERY_CLASSROOM';
 export const QUERY_CLASSROOM_SUCCESS = 'app/WebcamPage/QUERY_CLASSROOM_SUCCESS';
 export const QUERY_CLASSROOM_ERROR = 'app/WebcamPage/QUERY_CLASSROOM_ERROR';

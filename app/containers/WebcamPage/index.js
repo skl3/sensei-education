@@ -14,8 +14,17 @@ import { createStructuredSelector } from 'reselect';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid,
          Line, Legend, Label, LabelList, Brush } from 'recharts';
 
-import { queryClassroom, recordVideoImage } from './actions';
-import makeSelectWebcamPage, { selectLoadingClassroom, selectClassroom } from './selectors';
+import { createSession, queryClassroom, recordVideoImage } from './actions';
+import makeSelectWebcamPage, { selectEmotions, selectSession, selectLoadingClassroom, selectClassroom } from './selectors';
+
+const generateUUID = () => {
+  let d = new Date().getTime();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    let r = (d + Math.random()*16)%16 | 0;
+    d = Math.floor(d/16);
+    return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+  });
+};
 
 
 export class WebcamPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -30,11 +39,10 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
 
   componentDidMount() {
     const classCode = this.props.params.id;
-    this.setState({
-      code: classCode,
-      sessionId: this.generateUUID(),
-    });
+    const sessionId = generateUUID();
+    this.setState({ code: classCode, sessionId });
     // TODO: query for classroom information
+    this.props.onCreateSession(classCode, sessionId);
     this.props.onFetchClassroomInformation(classCode);
   }
 
@@ -61,15 +69,6 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     this.setState({ isPlaying: event.data == 1 });
   }
 
-  generateUUID = () => {
-    let d = new Date().getTime();
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      let r = (d + Math.random()*16)%16 | 0;
-      d = Math.floor(d/16);
-      return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-    });
-  };
-
   render() {
     const youtubeStyle = {
       background: 'black',
@@ -86,7 +85,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
       textAlign: 'center',
     };
 
-    const { classroom, loadingClassroom } = this.props;
+    const { emotions, session, classroom, loadingClassroom } = this.props;
 
     return (
       <div>
@@ -97,6 +96,9 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           ]}
         />
         <div>
+          <div>Emotions: { JSON.stringify(session) }</div>
+          <div>Session: { JSON.stringify(session) }</div>
+          <div>Classroom: { JSON.stringify(classroom) }</div>
           <div style={{width: '100%', marginLeft: 'auto',
                        marginRight: 'auto', paddingLeft: '30px',
                        paddingRight: '30px', paddingTop: '20px',
@@ -226,10 +228,15 @@ const mapStateToProps = createStructuredSelector({
   // WebcamPage: makeSelectWebcamPage(),
   loadingClassroom: selectLoadingClassroom(),
   classroom: selectClassroom(),
+  session: selectSession(),
+  emotions: selectEmotions(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    onCreateSession: (classCode, sessionId) => {
+      dispatch(createSession(classCode, sessionId));
+    },
     onFetchClassroomInformation: (classCode) => {
       dispatch(queryClassroom(classCode));
     },

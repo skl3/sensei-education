@@ -18,6 +18,15 @@ const selectWebcamPageDomain = () => (state) => state.get('webcam');
    (webcamPageDomain) => webcamPageDomain.get('classroom')
  );
 
+ const selectEmotions = () => createSelector(
+   selectWebcamPageDomain(),
+   (webcamPageDomain) => webcamPageDomain.get('emotions')
+ );
+
+const selectSession = () => createSelector(
+  selectWebcamPageDomain(),
+  (webcamPageDomain) => webcamPageDomain.get('session')
+);
 /**
  * Default selector used by WebcamPage
  */
@@ -32,4 +41,6 @@ export {
   selectWebcamPageDomain,
   selectLoadingClassroom,
   selectClassroom,
+  selectEmotions,
+  selectSession,
 };

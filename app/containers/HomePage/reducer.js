@@ -6,9 +6,9 @@
 
 import { fromJS } from 'immutable';
 import {
-  GENERATE_CLASSROOM,
-  GENERATE_CLASSROOM_SUCCESS,
-  GENERATE_CLASSROOM_ERROR,
+  QUERY_PUBLIC_CLASSROOMS,
+  QUERY_PUBLIC_CLASSROOMS_SUCCESS,
+  QUERY_PUBLIC_CLASSROOMS_ERROR,
   SEARCH_CLASSROOM,
   SEARCH_CLASSROOM_SUCCESS,
   SEARCH_CLASSROOM_ERROR,
@@ -18,15 +18,17 @@ const initialState = fromJS({});
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
-    case GENERATE_CLASSROOM:
+    case QUERY_PUBLIC_CLASSROOMS:
       return state
-        .set('generating', true);
-    case GENERATE_CLASSROOM_SUCCESS:
+        .set('loadingClassrooms', true)
+        .set('classrooms', false);
+    case QUERY_PUBLIC_CLASSROOMS_SUCCESS:
       return state
-        .set('generating', false);
-    case GENERATE_CLASSROOM_ERROR:
+        .set('loadingClassrooms', false)
+        .set('classrooms', action.classrooms);
+    case QUERY_PUBLIC_CLASSROOMS_ERROR:
       return state
-        .set('generating', false);
+        .set('loadingClassrooms', false);
     case SEARCH_CLASSROOM:
       return state
         .set('searching', true);

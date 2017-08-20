@@ -5,6 +5,9 @@
  */
 
 import {
+  QUERY_PUBLIC_CLASSROOMS,
+  QUERY_PUBLIC_CLASSROOMS_SUCCESS,
+  QUERY_PUBLIC_CLASSROOMS_ERROR,
   GENERATE_CLASSROOM,
   GENERATE_CLASSROOM_SUCCESS,
   GENERATE_CLASSROOM_ERROR,
@@ -12,6 +15,27 @@ import {
   SEARCH_CLASSROOM_SUCCESS,
   SEARCH_CLASSROOM_ERROR,
 } from './constants';
+
+
+export function queryPublicClassrooms() {
+  return {
+    type: QUERY_PUBLIC_CLASSROOMS,
+  }
+}
+
+export function publicClassroomsQueried(classrooms) {
+  return {
+    type: QUERY_PUBLIC_CLASSROOMS_SUCCESS,
+    classrooms,
+  };
+}
+
+export function queryPublicClassroomsError(error) {
+  return {
+    type: QUERY_PUBLIC_CLASSROOMS_ERROR,
+    error,
+  };
+}
 
 export function generateClassroom() {
   return {
