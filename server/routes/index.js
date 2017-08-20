@@ -72,7 +72,6 @@ router.patch('/classrooms/:id', (req, res, next) => {
 // TODO: [WIP] post image for classroom
 router.post('/classrooms/:id/images', (req, res, next) => {
   const classroomCode = req.params.id;
-  console.log(req.body);
   const { sessionId, encodedImage, videoTs } = req.body; // sessionId and encodedImage inside req body
   console.log(videoTs, 'videots');
   // determine whether there is a new session
@@ -82,9 +81,9 @@ router.post('/classrooms/:id/images', (req, res, next) => {
       if (!session) {
         (new Session({ sessionId, classCode: classroomCode, startTime: new Date() }))
           .save()
-          .then(newSesssion => {
+          .then(newSession => {
             // update classroom with new session
-            return Classroom.findOneAndUpdate({ classCode: classroomCode })
+            return Classroom.findOneAndUpdate({ classCode: classroomCode }, { $push: { sessions: newSession._id}})
               .then(updatedClassroom => {
                 const emotionPredictions = updateSessionWithNewImage(
                   sessionId, encodedImage, videoTs);
@@ -158,7 +157,6 @@ function updateSessionWithNewImage(sessionId, encodedImage, videoTs) {
           console.log(body, 'response from face2emotion'); // should be a map
           const emotionsMap = body.data[0]; // TODO: support multiple predictions
           const { angry, disgust, fear, happy, sad, surprise, neutral } = emotionsMap;
-          console.log(sessionId, videoTs);
           return new Emotion({
             angry,
             disgust,
@@ -207,6 +205,23 @@ router.get('/classrooms/:id', (req, res, next) => {
         model: 'Emotion'
       }
     })
+    .then(classroom => res.status(200).json(classroom))
+    .catch(err => {
+      console.error("Error getting classroom for analytics", err);
+      return res.status(500).json({
+        success: false,
+        error: err,
+        message: "Error getting classroom for analytics",
+      });
+    });
+});
+
+// get classroom analytics
+router.get('/classrooms/:classCode/code', (req, res, next) => {
+  // query all the sessions from classroom
+  const { classCode } = req.params;
+  console.log('classcode', classCode);
+  return Classroom.findOne({ classCode })
     .then(classroom => res.status(200).json(classroom))
     .catch(err => {
       console.error("Error getting classroom for analytics", err);

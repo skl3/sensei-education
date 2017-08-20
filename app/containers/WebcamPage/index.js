@@ -8,13 +8,12 @@ import React, { PropTypes } from 'react';
 import Webcam from 'react-webcam';
 import YouTube from 'react-youtube';
 import Helmet from 'react-helmet';
-import { Button } from 'antd'
+import { Row, Col, Button, Tag } from 'antd'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Row, Col } from 'antd';
 
-import { recordVideoImage } from './actions';
-import makeSelectWebcamPage from './selectors';
+import { queryClassroom, recordVideoImage } from './actions';
+import makeSelectWebcamPage, { selectLoadingClassroom, selectClassroom } from './selectors';
 
 export class WebcamPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -26,10 +25,13 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
   }
 
   componentDidMount() {
+    const classCode = this.props.params.id;
     this.setState({
-      code: this.props.params.id,
+      code: classCode,
       sessionId: this.generateUUID(),
     });
+    // TODO: query for classroom information
+    this.props.onFetchClassroomInformation(classCode);
   }
 
   setRef = (webcam) => this.webcam = webcam;
@@ -64,15 +66,10 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
   };
 
   render() {
-    const containerStyle = {
-      // marginRight: 'auto',
-      // marginLeft: 'auto',
-      width: '100%',
-    };
     const youtubeStyle = {
       background: 'black',
       textAlign: 'center',
-    }
+    };
 
     const footerContainerStyle = {
       paddingRight: '15px',
@@ -82,7 +79,9 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
       paddingTop: '30px',
       paddingBottom: '30px',
       textAlign: 'center',
-    }
+    };
+
+    const { classroom, loadingClassroom } = this.props;
 
     return (
       <div>
@@ -92,7 +91,8 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
             { name: 'description', content: 'Description of WebcamPage' },
           ]}
         />
-        <div style={containerStyle}>
+        <div>
+          <div>Classroom: { JSON.stringify(classroom) }</div>
           <div style={{width: '100%', marginLeft: 'auto',
                        marginRight: 'auto', paddingLeft: '30px',
                        paddingRight: '30px', paddingTop: '20px'}}>
@@ -136,9 +136,11 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                          marginRight: 'auto', paddingLeft: '30px',
                          paddingRight: '30px', paddingTop: '20px',
                          paddingBottom: '20px', border: '2px solid #DCDCDC'}}>
-              <h2>How Hedge Funds Make Money</h2>
+              <h2>{classroom.title}</h2>
               <br />
-              <p style={{fontSize: '15px'}}>Foobar description</p>
+              <div>{ classroom.tags.map((tag, i) => (<Tag key={`${i}-tag`}>{tag}</Tag>))}</div>
+              <br />
+              <p style={{fontSize: '15px'}}>{classroom.description}</p>
             </div>
           </div>
         </div>
@@ -157,10 +159,15 @@ WebcamPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   // WebcamPage: makeSelectWebcamPage(),
+  loadingClassroom: selectLoadingClassroom(),
+  classroom: selectClassroom(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    onFetchClassroomInformation: (classCode) => {
+      dispatch(queryClassroom(classCode));
+    },
     onSendImage: (code, image, videoTs, sessionId) => {
       const data = {
         encodedImage: image.replace("data:image/png;base64,", ""),
