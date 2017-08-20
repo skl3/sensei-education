@@ -2,6 +2,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser')
 const logger = require('./logger');
 
 const argv = require('minimist')(process.argv.slice(2));
@@ -18,7 +19,9 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => console.log('MongoDB connection @:', mongodbUrl));
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
-// app.use('/api', require('./routes'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use('/api', require('./routes'));
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

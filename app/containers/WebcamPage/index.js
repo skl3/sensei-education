@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import makeSelectWebcamPage from './selectors';
+import YouTube from 'react-youtube';
 
 export class WebcamPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -18,6 +19,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     this.state = {
       imageTaken: '',
     };
+
   }
 
   setRef = (webcam) => {
@@ -26,10 +28,17 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
 
   capture() {
     const imageSrc = this.webcam.getScreenshot();
-    console.log('image captured');
     this.setState({
       imageTaken: imageSrc,
     });
+    let secondsPlayed = this.state.player.getCurrentTime();
+    console.log(secondsPlayed)
+  }
+
+  onReady = (event) => {
+    this.setState({
+      player: event.target
+    })
   }
 
   render() {
@@ -51,13 +60,14 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
         />
         <div style={containerStyle}>
           <h1>Webcam</h1>
+          <YouTube videoId={'F9z_3obVjFs'} onReady={this.onReady} />
           <div>
             <Webcam
               audio={false}
+              width={350}
               height={350}
               ref={this.setRef}
               screenshotFormat="image/png"
-              width={350}
             />
           </div>
           <Button type="primary" size="large" onClick={this.capture.bind(this)}>Capture photo</Button>

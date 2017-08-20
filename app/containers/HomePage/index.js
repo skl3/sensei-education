@@ -10,31 +10,32 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import makeSelectHome from './selectors';
+import { generateClassroom, searchClassroom } from './actions';
 
 export class Home extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.state = {
-      codeInput: '',
+      value: '',
       focus: false,
     };
   }
 
-  handleInputChange(e) {
+  handleInputChange = (e) => {
     this.setState({
-      codeInput: e.target.value,
+      value: e.target.value,
     });
   }
 
-  handleFocusBlur(e) {
+  handleFocusBlur = (e) => {
     this.setState({
       focus: e.target === document.activeElement,
     });
   }
 
-  handleSearch() {
-    if (this.props.onSearch) {
-      this.props.onSearch(this.state.value);
+  handleSearch = () => {
+    if (this.props.onSearchClassroom) {
+      this.props.onSearchClassroom(this.state.value);
     }
   }
 
@@ -121,7 +122,9 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
                 course home page.
               </p>
               <br />
-              <Button type="primary" size="large" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>
+              <Button type="primary" size="large"
+                style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
+                onClick={() => this.props.onGenerateClassroom()}>
                 Create a Classroom!
               </Button>
             </Col>
@@ -134,6 +137,8 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
 
 Home.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  onGenerateClassroom: PropTypes.func,
+  onSearchClassroom: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -143,6 +148,12 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    onGenerateClassroom: () => {
+      dispatch(generateClassroom());
+    },
+    onSearchClassroom: (query) => {
+      dispatch(searchClassroom(query));
+    },
   };
 }
 
