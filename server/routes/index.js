@@ -11,7 +11,7 @@ const Session = require('../models/session');
 // Other APIs
 const TRUEFACE_API = 'https://api.chui.ai/v1';
 const TRUEFACE_API_KEY = 'h1itnXrydBa4cN1wxdjSs60i31Cmx1I41Q32GkIP';
-const FACE2EMOTION_API = process.env.face2emotion || '';
+const FACE2EMOTION_API = 'https://face2emotionapp.herokuapp.com/predict';
 
 // TODO: improve this endpoint to search on title and description as well
 // query classrooms
@@ -115,7 +115,8 @@ function updateSessionWithNewImage(sessionId, encodedImage) {
       const truefaceReqOptions = {
         url: TRUEFACE_API + '/facedetect',
         method: "POST",
-        data: JSON.stringify({ img: encodedImage }),
+        json: true,
+        body: { img: encodedImage },
         headers: {
           'x-api-key': TRUEFACE_API_KEY,
           'Content-Type': "application/json",
@@ -127,14 +128,18 @@ function updateSessionWithNewImage(sessionId, encodedImage) {
           console.error("Error w/ req to trueface: ", error);
           throw new Error("Error w/ req to trueface API: ", error);
         }
-        console.log('statusCode:', response.statusCode); // Print the response status code if a response was received
-        console.log('body:', body); // Print the HTML for the Google homepage.
         // pass to Mike's NN api
-        const { faces } =  body;
+        const { faces, success, msg } =  body;
+        if (!success || msg == 'no face detected') {
+          return { success: false, data: "Failed to identify face" };
+        }
+        console.log('faces', faces);
         const face2emotionReqOptions = {
-          url: + '/',
-          meethod: "POST",
-          data: {
+          url: FACE2EMOTION_API,
+          headers: { 'Content-Type': "application/json" },
+          method: "POST",
+          json: true,
+          body: {
             image: encodedImage,
             faces,
           },
@@ -144,8 +149,9 @@ function updateSessionWithNewImage(sessionId, encodedImage) {
             console.error("Error w/ req to Face2Emotion: ", error);
             throw new Error("Error w/ req to Face2Emotion API: ", error);
           }
-          console.log(response, 'response from face2emotion'); // should be a map
+          console.log(body, 'response from face2emotion'); // should be a map
           const emotionPredictions = response.data;
+          // TODO: save emotion HERE
           return emotionPredictions;
         });
       });
@@ -173,7 +179,11 @@ router.get('/classrooms/:id', (req, res, next) => {
     .then(classroom => res.status(200).json(classroom))
     .catch(err => {
       console.error("Error getting classroom for analytics", err);
-      throw new Error("Error getting classroom for analytics", err);
+      return res.status(500).json({
+        success: false,
+        error: err,
+        message: "Error getting classroom for analytics",
+      });
     });
 });
 
