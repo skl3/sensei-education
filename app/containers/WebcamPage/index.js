@@ -34,6 +34,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
       isPlaying: false,
       videoLength: 100,
       sessionId: '',
+      webcamBottom: 0,
     };
   }
 
@@ -44,6 +45,9 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     // TODO: query for classroom information
     this.props.onCreateSession(classCode, sessionId);
     this.props.onFetchClassroomInformation(classCode);
+    console.log(this.refs.youtube)
+    let webcamBottom = this.refs.youtubeObject.offsetTop;
+    this.setState({webcamBottom: webcamBottom});
   }
 
   setRef = (webcam) => this.webcam = webcam;
@@ -112,7 +116,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
               </p>
             </div>
           </div>
-          <div style={youtubeStyle}>
+          <div style={youtubeStyle} ref="youtubeObject">
             <YouTube
               videoId={'F9z_3obVjFs'}
               onReady={this.onReady}
@@ -121,9 +125,9 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
               width={800}
             />
             <Webcam
-              style={{ position: 'absolute', bottom: 47, right: 0 }}
+              style={{ position: 'fixed', bottom: 0, right: 0 }}
               audio={false}
-              width={200}
+              width={240}
               height={180}
               ref={this.setRef}
               screenshotFormat="image/png"
