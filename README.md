@@ -1,8 +1,8 @@
 # SentiSchool
 
-SentiSchool is EdTech application that tracks the emotions of students in an online classroom as they watch a lecture or participate in discussion.
+SentiSchool is an EdTech application that tracks the emotions of students in an online classroom as they watch a lecture or participate in discussion.
 
-MOOCs have been very successful at scaling high quality video lectures to a larger population of students but often lack in keeping students interested and preserving the teacher-student relationship as found in more traditional classrooms.
+MOOCs have been very successful at scaling accessibility to high quality video lectures, but often lack in keeping students interested and providing nonverbal feedback to teachers as found in more traditional classrooms.
 
 Currently, MOOCs employ exercises or surveys to measure student engagement, but these often prove to be trivial and/or biased. SentiSchool tries to address this problem by more directly measuring engagement through analyzing a webcam feed of the student. As the student watches the lecture, SentiSchool extracts his/her emotion i.e. happy, angry, sad as a proxy for whether the student is frustrated, excited, disengaged, etc. This information for each student is relayed back to the course content creator and may be useful for future content creation, personalized lessons, tracking progress, etc.
 
