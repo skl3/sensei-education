@@ -26,7 +26,7 @@ export class Header extends React.PureComponent {
   }
 
   render() {
-    const linkStyle = { width: '110px', textAlign: 'center', float: 'right' };
+    const linkStyle = { width: '110px', textAlign: 'center', float: 'right', fontSize: '14px' };
     return (
       <Menu
         onClick={this.handleClick}

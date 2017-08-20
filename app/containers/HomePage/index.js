@@ -47,7 +47,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       marginRight: 'auto',
       marginLeft: 'auto',
       paddingTop: '50px',
-      paddingBottom: '50px',
+      paddingBottom: '60px',
     }
     const titleContainerStyle = {
       paddingRight: '15px',
@@ -57,6 +57,16 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       paddingTop: '100px',
       paddingBottom: '100px',
       backgroundColor: '#2BA8C6',
+    }
+    const footerContainerStyle = {
+      backgroundColor: '#2BA8C6',
+      paddingRight: '15px',
+      paddingLeft: '15px',
+      marginRight: 'auto',
+      marginLeft: 'auto',
+      paddingTop: '30px',
+      paddingBottom: '30px',
+      textAlign: 'center',
     }
     const rowDescriptionStyle = {
       paddingRight: '30px',
@@ -71,18 +81,15 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
           ]}
         />
         <div style={titleContainerStyle}>
-          <Row>
-            <div style={rowDescriptionStyle}>
-              <h1 style={{fontFamily: 'Montserrat', fontSize: 40, color: 'white'}}>Welcome to SentiSchool</h1>
-              <div style={{paddingTop: '15px'}}>
-                <p style={{fontFamily: 'Montserrat', fontSize: 25, color: 'white'}}>
-                  Using Artificial Intelligence to Improve Student Engagement in Online Courses
-                </p>
-              </div>
+          <div style={rowDescriptionStyle}>
+            <h1 style={{fontFamily: 'Montserrat', fontSize: 40, color: 'white'}}>Welcome to SentiSchool</h1>
+            <div style={{paddingTop: '15px'}}>
+              <p style={{fontFamily: 'Montserrat', fontSize: 25, color: 'white'}}>
+                Using Artificial Intelligence to Improve Student Engagement in Online Courses
+              </p>
             </div>
-          </Row>
+          </div>
         </div>
-        <hr />
         <div style={classContainerStyle}>
           <Row>
             <Col span={9} offset={2} style={{ textAlign: 'center', paddingTop: '30px' }}>
@@ -129,6 +136,49 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
               </Button>
             </Col>
           </Row>
+        </div>
+        <hr color="#DCDCDC" />
+        <div style={classContainerStyle}>
+          <div style={rowDescriptionStyle}>
+            <h1 style={{fontFamily: 'Montserrat', fontSize: 30, textAlign: 'center'}}>How it Works</h1>
+            <div style={{paddingTop: '50px'}}>
+              <Row>
+                <Col span={8} offset={2} style={{ textAlign: 'left', paddingTop: '30px' }}>
+                  <div style={{ textAlign: 'left', paddingBottom: '30px' }}>
+                    <h2 style={{fontFamily: 'Montserrat', fontSize: 20}}>Webcam Stream</h2>
+                    <br />
+                    <p style={{fontFamily: 'Montserrat', fontSize: 18}}>
+                      Students share their webcam stream when viewing educational
+                      content.
+                    </p>
+                  </div>
+                  <div style={{ textAlign: 'left', paddingBottom: '30px' }}>
+                    <h2 style={{fontFamily: 'Montserrat', fontSize: 20}}>Deep Learning Models</h2>
+                    <br />
+                    <p style={{fontFamily: 'Montserrat', fontSize: 18}}>
+                      SentiSchool uses state-of-the-art deep learning models to predict 1 of 7 emotions
+                      that are correlated to student engagement.
+                    </p>
+                  </div>
+                  <div style={{ textAlign: 'left', paddingBottom: '30px' }}>
+                    <h2 style={{fontFamily: 'Montserrat', fontSize: 20}}>Student Analytics</h2>
+                    <br />
+                    <p style={{fontFamily: 'Montserrat', fontSize: 18}}>
+                      Tracking engagement over time lead to powerful analytics for
+                      content creators that can be used for personalized curriculums
+                      and better content.
+                    </p>
+                  </div>
+                </Col>
+                <Col span={11} offset={2}
+                     style={{ textAlign: 'center', paddingTop: '30px', background: 'black', height: 500 }}>
+                </Col>
+              </Row>
+            </div>
+          </div>
+        </div>
+        <div style={footerContainerStyle}>
+          <h2 style={{color: "white", fontSize: "15px"}}>SentiSchool. Copyright © 2017. All Rights Reserved.</h2>
         </div>
       </div>
     );
