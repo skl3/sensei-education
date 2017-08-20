@@ -1,7 +1,12 @@
 const express = require('express');
 const shortid = require('shortid');
 const request = require('request');
+const mongoose = require('mongoose');
 const router = express.Router();
+
+// for querying objectIds
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
 
 // Mongoose models
 const Classroom = require('../models/classroom');
@@ -16,10 +21,8 @@ const FACE2EMOTION_API = 'https://face2emotionapp.herokuapp.com/predict';
 // TODO: improve this endpoint to search on title and description as well
 // query classrooms by classCode
 router.get('/classrooms', (req, res, next) => {
-  console.log('inside here', req.query);
   return Classroom.findOne({ classCode: req.query.code })
     .then(classroom => {
-      console.log(classroom, 'classroom found');
       return classroom ?
         res.status(200).json(classroom) :
         res.status(404).json({ data: "Not found" })
@@ -71,6 +74,52 @@ router.patch('/classrooms/:id', (req, res, next) => {
   });
 });
 
+// Create session inside Classroom & return classroom obj w/ embedded sessions
+router.post('/classrooms/:code/sessions', (req, res, next) => {
+  const classCode = req.params.code;
+  const { sessionId } = req.body;
+  return Classroom.findOne({ classCode })
+    .then(classroom => {
+      return (new Session({
+        sessionId,
+        startTime: new Date(),
+        classroomId: ObjectId(classroom._id),
+      }))
+        .save()
+        .then(session => {
+          return Classroom.findOneAndUpdate({ _id: classroom._id }, { $push: { sessions: session._id }})
+            .then(updatedClassroom => {
+              return res.status(200).json(updatedClassroom);
+            })
+            .catch(err => {
+              console.error("Update classroom session error");
+              return res.status(500).json({
+                success: false,
+                message: "Update classroom session error",
+                error: err,
+              });
+            });
+        })
+        .catch(err => {
+          console.error("Session creation error: ", err);
+          return res.status(500).json({
+            success: false,
+            message: "Session creation error",
+            error: err,
+          });
+        });
+    })
+    .catch(err => {
+      console.error("Classroom not found by class code", err);
+      return res.status(500).json({
+        success: false,
+        message: "Classroom not found by class code error",
+        error: err,
+      });
+    });
+
+});
+
 // TODO: [WIP] post image for classroom
 router.post('/classrooms/:id/images', (req, res, next) => {
   const classroomCode = req.params.id;
@@ -79,32 +128,8 @@ router.post('/classrooms/:id/images', (req, res, next) => {
   // determine whether there is a new session
   return Session.findOne({ sessionId })
     .then(session => {
-      // create the session if it does not exist
-      if (!session) {
-        (new Session({ sessionId, classCode: classroomCode, startTime: new Date() }))
-          .save()
-          .then(newSession => {
-            // update classroom with new session
-            return Classroom.findOneAndUpdate({ classCode: classroomCode }, { $push: { sessions: newSession._id}})
-              .then(updatedClassroom => {
-                const emotionPredictions = updateSessionWithNewImage(
-                  sessionId, encodedImage, videoTs);
-                return res.status(200).json(emotionPredictions); // TODO: format response data
-              })
-              .catch(err => {
-                console.error("Classroom update error: ", err);
-                throw new Error("Classroom update error: ", err);
-              });
-          })
-          .catch(err => {
-            console.error("New session created error: ", err); // Log error
-            throw new Error("New session created error: ", err);
-          });
-      } else {
-        const emotionPredictions = updateSessionWithNewImage(
-          sessionId, encodedImage, videoTs);
-        return res.status(200).json(emotionPredictions); // TODO: format response data
-      }
+      return updateSessionWithNewImage(
+        sessionId, encodedImage, videoTs, res);
     })
     .catch(err => {
       console.error("Error querying for session existence", err);
@@ -113,7 +138,7 @@ router.post('/classrooms/:id/images', (req, res, next) => {
 });
 
 // update session with new image
-function updateSessionWithNewImage(sessionId, encodedImage, videoTs) {
+function updateSessionWithNewImage(sessionId, encodedImage, videoTs, res) {
   return Session.findOneAndUpdate({ sessionId }, { $push: { images: encodedImage }})
     .then(session => {
       // pass the base64 encoded image to trufaceapi
@@ -131,16 +156,22 @@ function updateSessionWithNewImage(sessionId, encodedImage, videoTs) {
         // get the cropped coordinates
         if (error) {
           console.error("Error w/ req to trueface: ", error);
-          return { success: false, message: "Error w/ req to Face2Emotion API", error };
-          throw new Error("Error w/ req to trueface API: ", error);
+          return res.status(500).json({
+            success: false,
+            message: "Error w/ req to trueface API:",
+            error
+          });
         }
         // pass to Mike's NN api
         const { faces, success, msg } =  body;
-        console.log({ faces, success, msg });
+        // console.log({ faces, success, msg });
         if (!success || msg == 'no face detected') {
-          return { success: false, data: "Failed to identify face" };
+          return res.status(203).json({
+            success: false,
+            data: "Failed to identify face",
+          });
         }
-        console.log('faces', faces);
+        // console.log('faces', faces);
         const face2emotionReqOptions = {
           url: FACE2EMOTION_API,
           headers: { 'Content-Type': "application/json" },
@@ -154,9 +185,13 @@ function updateSessionWithNewImage(sessionId, encodedImage, videoTs) {
         return request(face2emotionReqOptions, (error, response, body) => {
           if (error) {
             console.error("Error w/ req to Face2Emotion: ", error);
-            return { success: false, message: "Error w/ req to Face2Emotion API", error };
+            return res.status(500).json({
+              success: false,
+              message: "Error w/ req to Face2Emotion API",
+              error,
+            });
           }
-          console.log(body, 'response from face2emotion'); // should be a map
+          // console.log(body, 'response from face2emotion'); // should be a map
           const emotionsMap = body.data[0]; // TODO: support multiple predictions
           const { angry, disgust, fear, happy, sad, surprise, neutral } = emotionsMap;
           return new Emotion({
@@ -171,17 +206,25 @@ function updateSessionWithNewImage(sessionId, encodedImage, videoTs) {
             videoTs,
           }).save()
             .then(newEmotion => {
-              console.log(newEmotion, 'new emotion created');
+              // console.log(newEmotion, 'new emotion created');
               return Session.findOneAndUpdate({ sessionId }, { $push: { emotions: newEmotion._id }})
-                .then(sesssion => { success: session ? true : false })
+                .then(session2 => res.status(200).json(newEmotion))
                 .catch(err => {
                   console.error("Error updating session with encoded image", err);
-                  throw new Error("Error updating session with encoded image", err);
+                  return res.status(500).json({
+                    success: false,
+                    message: "Error updating session with encoded image",
+                    error: err,
+                  });
                 });
             })
             .catch(err => {
               console.error("Error with creation emotion prediction");
-              return { success: false, message: "Error with creation emotion prediction", error };
+              return res.status(500).json({
+                success: false,
+                message: "Error with creation emotion prediction",
+                error: err,
+              });
             });
 
         });

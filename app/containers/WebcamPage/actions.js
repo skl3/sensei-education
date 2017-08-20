@@ -5,6 +5,9 @@
  */
 
 import {
+  CREATE_SESSION,
+  CREATE_SESSION_SUCCESS,
+  CREATE_SESSION_ERROR,
   QUERY_CLASSROOM,
   QUERY_CLASSROOM_SUCCESS,
   QUERY_CLASSROOM_ERROR,
@@ -12,6 +15,29 @@ import {
   RECORD_VIDEO_IMAGE_SUCCESS,
   RECORD_VIDEO_IMAGE_ERROR,
 } from './constants';
+
+// TODO: redo with server generated sessionId
+export function createSession(classCode, sessionId) {
+  return {
+    type: CREATE_SESSION,
+    classCode,
+    sessionId,
+  };
+}
+
+export function sessionCreated(session) {
+  return {
+    type: CREATE_SESSION_SUCCESS,
+    session,
+  };
+}
+
+export function createSessionError(err) {
+  return {
+    type: CREATE_SESSION_ERROR,
+    err,
+  };
+}
 
 export function queryClassroom(classCode) {
   return {
@@ -42,9 +68,10 @@ export function recordVideoImage(code, data) {
   };
 }
 
-export function videoImageRecorded() {
+export function videoImageRecorded(emotion) {
 	return {
 		type: RECORD_VIDEO_IMAGE_SUCCESS,
+    emotion,
 	};
 }
 
