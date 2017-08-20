@@ -1,16 +1,16 @@
 {
-  "name": "react-boilerplate",
+  "name": "sensei-education",
   "version": "3.4.0",
-  "description": "A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices",
+  "description": "An EdTech application that tracks the emotions of students in an online classroom as they watch a lecture or participate in discussion",
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-boilerplate/react-boilerplate.git"
+    "url": "git@github.com:skl-symphony/sensei-education.git"
   },
   "engines": {
     "npm": ">=3",
     "node": ">=5"
   },
-  "author": "Max Stoiber",
+  "author": "Stan Liu",
   "license": "MIT",
   "scripts": {
     "analyze:clean": "rimraf stats.json",

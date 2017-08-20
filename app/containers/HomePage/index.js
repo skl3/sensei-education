@@ -134,7 +134,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
               <br />
               <p style={{fontFamily: 'Montserrat', fontSize: 15, textAlign: 'left'}}>
                 <b>Create a classroom</b> to start streaming content to your students. Sensei
-                will collect data on each students engagement and summarize it on the
+                will collect data on each student's engagement and summarize it on the
                 course home page.
               </p>
               <br />
