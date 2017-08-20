@@ -149,34 +149,14 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
         <hr color="#DCDCDC" />
         <div style={classContainerStyle}>
           <div style={rowDescriptionStyle}>
-            <h1 style={{fontFamily: 'Montserrat', fontSize: 20, textAlign: 'center'}}>Deep Learning Courses</h1>
-            <div style={{paddingTop: "40px"}}>
-              <Row>
-                <Col span={6} offset={0}>
-                  <Card style={{ width: 240 }} bodyStyle={{ padding: 0 }}>
-                    <div style={{display: 'block'}}>
-                      <iframe
-                        width="100%" src="https://www.youtube.com/embed/PlhFWT7vAEw?list=PLjK8ddCbDMphIMSXn-w1IjyYpHU3DaUYw"
-                        frameborder="0" allowfullscreen>
-                      </iframe>
-                    </div>
-                    <div style={{padding: '10px 16px'}}>
-                      <h3>Deep Learning Lecture 1: Introduction</h3>
-                      <p style={{color: "#999"}}>Introducion to Linear Regression</p>
-                    </div>
-                  </Card>
+            <h1 style={{fontFamily: 'Montserrat', fontSize: 20, textAlign: 'center', margin: '0 0 40px 0' }}>Public Courses</h1>
+            <Row>
+              { classrooms ? classrooms.filter(classroom => classroom.title && classroom.videoUrl).map((classroom) =>
+                (<Col span={6} offset={0}>
+                  <ClassCard url={classroom.videoUrl} title={classroom.title} description={classroom.description} classCode={classroom.classCode} />
                 </Col>
-              </Row>
-              <hr style={{ margin: '20px 0' }}/>
-              <h1 style={{fontFamily: 'Montserrat', fontSize: 20, textAlign: 'center', margin: '40px 0' }}>Public Courses</h1>
-              <Row>
-                { classrooms ? classrooms.filter(classroom => classroom.title && classroom.videoUrl).map((classroom) =>
-                  (<Col span={6} offset={0}>
-                    <ClassCard url={classroom.videoUrl} title={classroom.title} description={classroom.description} classCode={classroom.classCode} />
-                  </Col>
-                )) : null }
-              </Row>
-            </div>
+              )) : null }
+            </Row>
           </div>
         </div>
         <hr color="#DCDCDC" />

@@ -11,13 +11,20 @@ import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import makeSelectTeacherPage from './selectors';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, Legend, Label, LabelList, Brush } from 'recharts';
-import { Input, Button, Checkbox, Tag, Row, Col } from 'antd';
+import { Input, Button, Checkbox, Tag, Row, Col, message } from 'antd';
 import { updateClassroomValue, updateClassroom, queryClassroom, querySession } from './actions';
 import {
   selectUpdatingClassroom, selectLoadingClassroom, selectLoadingSession,
   selectClassroom, selectSessions,
 } from './selectors';
 import YouTube from 'react-youtube';
+
+const getVideoIdFromUrl = (url) => {
+  if (!url) return;
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[7].length == 11) ? match[7] : false;
+};
 
 // TODO: check for sessions update every 30 seconds
 export class TeacherPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -48,6 +55,12 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
 
   onUpdateTagInput(value) {
     this.setState({ tagInput: value });
+  }
+
+  onUpdateNotification() {
+    setTimeout(() => {
+      message.success('Classroom information updated!');
+    }, 800);
   }
 
   genLineSettings() {
@@ -291,7 +304,10 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
                   </div>
                 </div>
                 <div style={{ marginTop: '10px' }}>
-                  <Button type="primary" onClick={() => this.props.onUpdateClassroom(classroom)}>Save</Button>
+                  <Button type="primary" onClick={() => {
+                    this.props.onUpdateClassroom(classroom);
+                    this.onUpdateNotification();
+                  }}>Save</Button>
                 </div>
               </Col>
               <Col span={7} offset={1}>
@@ -326,28 +342,31 @@ export class TeacherPage extends React.Component { // eslint-disable-line react/
             </Row>
           </div>
         </div>
-        <div style={{textAlign: 'left', background: 'white',
-                         marginTop: '50px', marginBottom: '50px',
-                         paddingTop: '20px', paddingBottom: '20px',
-                         border: '2px solid #DCDCDC', width: '970px',
-                         marginLeft: 'auto', marginRight: 'auto',
-                         padding: '20px 20px'}}>
+        <div style={{
+           textAlign: 'left', background: 'white',
+           marginTop: '50px', marginBottom: '50px',
+           paddingTop: '20px', paddingBottom: '20px',
+           border: '2px solid #DCDCDC', width: '970px',
+           marginLeft: 'auto', marginRight: 'auto',
+           padding: '20px 20px'}}>
               <Row>
                 <Col span={6}>
-                  <YouTube
-                    videoId={'F9z_3obVjFs'}
-                    opts={{width: '200', height: '200'}}
-                    width={200}
-                  />
+                  { classroom ? (
+                    <YouTube
+                      videoId={getVideoIdFromUrl(classroom.videoUrl)}
+                      opts={{width: '200', height: '200'}}
+                      width={200}
+                    />
+                  ): null }
                 </Col>
                 <Col span={12}>
                   <div style={{paddingTop: '20px'}}>
                     <h2 style={{fontFamily: 'Montserrat', fontSize: '25'}}>
-                      Your Video: <u>{classroom ? classroom.title : "Untitled No. 1"}</u>
+                      Your Video: <u>{ classroom && classroom.title ? classroom.title : "Untitled No. 1" }</u>
                     </h2>
                     <br />
                     <p style={{fontFamily: 'Montserrat', fontSize: '15'}}>
-                      {classroom ? classroom.title : "Update me! No description provided."}
+                      { classroom && classroom.description ? classroom.description : "Update me! No description provided." }
                     </p>
                   </div>
                 </Col>

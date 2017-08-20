@@ -8,14 +8,21 @@ import React from 'react';
 import { Card } from 'antd';
 // import styled from 'styled-components';
 
+const getVideoIdFromUrl = (url) => {
+  if (!url) return;
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[7].length == 11) ? match[7] : false;
+};
 
 function ClassCard(props) {
+  const embedLink = `https://www.youtube.com/embed/${getVideoIdFromUrl(props.url)}?enablejsapi=1`;
   return (
     <a href={`/webcam/${props.classCode}`}>
     <Card style={{ width: 240 }} bodyStyle={{ padding: 0 }}>
       <div style={{display: 'block'}}>
         <iframe
-          width="100%" src={props.url}
+          width="100%" src={embedLink}
           frameborder="0" allowfullscreen>
         </iframe>
       </div>
