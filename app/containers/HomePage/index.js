@@ -11,6 +11,7 @@ import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import makeSelectHome from './selectors';
 import { generateClassroom, searchClassroom } from './actions';
+import { Card } from 'antd';
 
 export class Home extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -71,6 +72,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
       paddingRight: '30px',
       paddingLeft: '30px',
     }
+
     return (
       <div>
         <Helmet
@@ -135,6 +137,30 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
               </Button>
             </Col>
           </Row>
+        </div>
+        <hr color="#DCDCDC" />
+        <div style={classContainerStyle}>
+          <div style={rowDescriptionStyle}>
+            <h1 style={{fontFamily: 'Montserrat', fontSize: 20, textAlign: 'center'}}>Deep Learning Courses</h1>
+            <div style={{paddingTop: "40px"}}>
+              <Row>
+                <Col span={6} offset={0}>
+                  <Card style={{ width: 240 }} bodyStyle={{ padding: 0 }}>
+                    <div style={{display: 'block'}}>
+                      <iframe
+                        width="100%" src="https://www.youtube.com/embed/PlhFWT7vAEw?list=PLjK8ddCbDMphIMSXn-w1IjyYpHU3DaUYw"
+                        frameborder="0" allowfullscreen>
+                      </iframe>
+                    </div>
+                    <div style={{padding: '10px 16px'}}>
+                      <h3>Deep Learning Lecture 1: Introduction</h3>
+                      <p style={{color: "#999"}}>Introducion to Linear Regression</p>
+                    </div>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </div>
         </div>
         <hr color="#DCDCDC" />
         <div style={classContainerStyle}>
