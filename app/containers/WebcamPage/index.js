@@ -113,7 +113,7 @@ function mapDispatchToProps(dispatch) {
   return {
     onSendImage: (code, image, secondsPlayed, sessionId) => {
       const data = {
-        image: image,
+        encodedImage: image.replace("data:image/png;base64,", ""),
         sessionId: sessionId,
         secondsPlayed: secondsPlayed,
       };

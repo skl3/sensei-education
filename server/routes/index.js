@@ -1,5 +1,6 @@
 const express = require('express');
 const shortid = require('shortid');
+const request = require('request');
 const router = express.Router();
 
 // Mongoose models
@@ -42,8 +43,7 @@ router.post('/classrooms', (req, res, next) => {
   return new Classroom({
     shortCode: shortid.generate(),
     classCode: shortid.generate(),
-  })
-    .save()
+  }).save()
     .then(createdClassroom => res.status(200).json(createdClassroom))
     .catch(err => {
       console.error("New classroom created error: ", err); // Log error
@@ -71,22 +71,20 @@ router.patch('/classrooms/:id', (req, res, next) => {
 
 // TODO: [WIP] post image for classroom
 router.post('/classrooms/:id/images', (req, res, next) => {
-  const classroomId = req.params.id;
+  const classroomCode = req.params.id;
   const { sessionId, encodedImage, videoTs } = req.body; // sessionId and encodedImage inside req body
   // determine whether there is a new session
-  return Session.find({ id: sessionId })
+  return Session.findOne({ sessionId })
     .then(session => {
       // create the session if it does not exist
       if (!session) {
-        new Session({ classroomId, startTime: new Date() })
+        (new Session({ sessionId, classCode: classroomCode, startTime: new Date() }))
           .save()
           .then(newSesssion => {
             // update classroom with new session
-            return Classroom.findOneAndUpdate({ id: classroomId })
+            return Classroom.findOneAndUpdate({ classCode: classroomCode })
               .then(updatedClassroom => {
-                console.log("Nothing to see here", updatedClassroom);
-                // TODO: updateSessionWithNewImage
-                const emotionPredictions = updateSessionWithNewImage(sessionId, classroomId, encodedImage);
+                const emotionPredictions = updateSessionWithNewImage(sessionId, encodedImage);
                 return res.status(200).json(emotionPredictions); // TODO: format response data
               })
               .catch(err => {
@@ -99,7 +97,7 @@ router.post('/classrooms/:id/images', (req, res, next) => {
             throw new Error("New session created error: ", err);
           });
       } else {
-        const emotionPredictions = updateSessionWithNewImage(sessionId, classroomId, encodedImage);
+        const emotionPredictions = updateSessionWithNewImage(sessionId, encodedImage);
         return res.status(200).json(emotionPredictions); // TODO: format response data
       }
     })
@@ -110,17 +108,14 @@ router.post('/classrooms/:id/images', (req, res, next) => {
 });
 
 // update session with new image
-function updateSessionWithNewImage(sessionId, classroomId, encodedImage) {
-  return Session.findOneAndUpdate(
-    { id: sessionId, classroomId },
-    { $push: { images: encodedImage }}
-  )
-   .then(session => {
+function updateSessionWithNewImage(sessionId, encodedImage) {
+  return Session.findOneAndUpdate({ sessionId }, { $push: { images: encodedImage }})
+    .then(session => {
       // pass the base64 encoded image to trufaceapi
       const truefaceReqOptions = {
         url: TRUEFACE_API + '/facedetect',
         method: "POST",
-        data: { img: encodedImage },
+        data: JSON.stringify({ img: encodedImage }),
         headers: {
           'x-api-key': TRUEFACE_API_KEY,
           'Content-Type': "application/json",
@@ -132,10 +127,10 @@ function updateSessionWithNewImage(sessionId, classroomId, encodedImage) {
           console.error("Error w/ req to trueface: ", error);
           throw new Error("Error w/ req to trueface API: ", error);
         }
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        console.log('statusCode:', response.statusCode); // Print the response status code if a response was received
         console.log('body:', body); // Print the HTML for the Google homepage.
         // pass to Mike's NN api
-        const { faces } =  response.body.data;
+        const { faces } =  body;
         const face2emotionReqOptions = {
           url: + '/',
           meethod: "POST",
