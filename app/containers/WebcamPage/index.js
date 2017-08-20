@@ -12,9 +12,11 @@ import { Button } from 'antd'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Row, Col } from 'antd';
+import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, Legend, Label, LabelList, Brush } from 'recharts';
 
 import { recordVideoImage } from './actions';
 import makeSelectWebcamPage from './selectors';
+
 
 export class WebcamPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -115,6 +117,53 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                   />
                 </Col>
                 <Col span={8} offset={0} style={{paddingTop: '30px'}}>
+                  <div className='line-chart-wrapper' key='item'>
+                    <LineChart width={700} height={200} data={[]} syncId="test">
+                      <CartesianGrid stroke='#f5f5f5' fill="#e6e6e6" />
+                      <XAxis type="number" dataKey="time" height={40} label="Time" />
+                      <YAxis type="number" domain={[0, 100]}>
+                        <Label value="Percent Level" angle={270} />
+                      </YAxis>
+                      <Tooltip />
+                      <Line
+                        key="sad"
+                        type="monotone"
+                        dataKey="sad"
+                        stroke="#ff7300"
+                        strokeOpacity="0.9"
+                        strokeDasharray="3 3" />
+                      <Line
+                        key="happy"
+                        type="monotone"
+                        dataKey="happy"
+                        stroke="#ff7300"
+                        strokeOpacity="0.9"
+                        strokeDasharray="3 3" />
+                      <Line
+                        key="confused"
+                        type="monotone"
+                        dataKey="confused"
+                        stroke="#ff7300"
+                        strokeOpacity="0.9"
+                        strokeDasharray="3 3" />
+                      <Line
+                        key="angry"
+                        type="monotone"
+                        dataKey="angry"
+                        stroke="#ff7300"
+                        strokeOpacity="0.9"
+                        strokeDasharray="3 3" />
+                      <Line
+                        key="disgusted"
+                        type="monotone"
+                        dataKey="disgusted"
+                        stroke="#ff7300"
+                        strokeOpacity="0.9"
+                        strokeDasharray="3 3" />
+                    </LineChart>
+                    <br/>
+                    <br/>
+                 </div>
                 </Col>
               </Row>
             </div>
