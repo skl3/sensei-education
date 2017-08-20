@@ -83,7 +83,7 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
     return (
       <div>
         <Helmet
-          title="Home"
+          title="Home | AI for Education"
           meta={[
             { name: 'description', content: 'Description of Home' },
           ]}
@@ -204,7 +204,8 @@ export class Home extends React.Component { // eslint-disable-line react/prefer-
                   </div>
                 </Col>
                 <Col span={11} offset={2}
-                     style={{ textAlign: 'center', paddingTop: '30px', background: 'black', height: 500 }}>
+                     style={{ textAlign: 'center', paddingTop: '30px', height: 500 }}>
+                  <img src={require('images/screenshot.png')} width='100%' />
                 </Col>
               </Row>
             </div>

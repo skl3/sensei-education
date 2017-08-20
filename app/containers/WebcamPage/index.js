@@ -11,6 +11,8 @@ import Helmet from 'react-helmet';
 import { Row, Col, Button, Tag } from 'antd'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid,
+         Line, Legend, Label, LabelList, Brush } from 'recharts';
 
 import { createSession, queryClassroom, recordVideoImage } from './actions';
 import makeSelectWebcamPage, { selectEmotions, selectSession, selectLoadingClassroom, selectClassroom } from './selectors';
@@ -24,11 +26,13 @@ const generateUUID = () => {
   });
 };
 
+
 export class WebcamPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.state = {
       isPlaying: false,
+      videoLength: 100,
       sessionId: '',
     };
   }
@@ -46,6 +50,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
 
   capture() {
     const { sessionId, player, code } = this.state;
+    this.setState({videoLength: player.getDuration()})
     const imageSrc = this.webcam.getScreenshot();
     const secondsPlayed = player.getCurrentTime();
     this.props.onSendImage(code, imageSrc, secondsPlayed, sessionId);
@@ -85,7 +90,7 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
     return (
       <div>
         <Helmet
-          title="WebcamPage"
+          title="Classroom | AI for Education"
           meta={[
             { name: 'description', content: 'Description of WebcamPage' },
           ]}
@@ -96,7 +101,8 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           <div>Classroom: { JSON.stringify(classroom) }</div>
           <div style={{width: '100%', marginLeft: 'auto',
                        marginRight: 'auto', paddingLeft: '30px',
-                       paddingRight: '30px', paddingTop: '20px'}}>
+                       paddingRight: '30px', paddingTop: '20px',
+                       paddingBottom: '20px'}}>
             <div>
               <p style={{fontSize: '15px'}}>
                 <b>Disclaimer:</b> SentiSchool will use data from your webcam to estimate
@@ -104,13 +110,6 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                 to make content more personalized and more relevant to you. Your data will not be
                 used in any other way. To <b>opt-out</b>, block camera access via the browser.
               </p>
-              <Row>
-                <Col span={5} offset={0}>
-
-                </Col>
-                <Col span={8} offset={0} style={{paddingTop: '30px'}}>
-                </Col>
-              </Row>
             </div>
           </div>
           <div style={youtubeStyle}>
@@ -122,10 +121,10 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
               width={800}
             />
             <Webcam
-              style={{ position: 'absolute', bottom: 35, right: 0 }}
+              style={{ position: 'absolute', bottom: 47, right: 0 }}
               audio={false}
               width={200}
-              height={200}
+              height={180}
               ref={this.setRef}
               screenshotFormat="image/png"
             />
@@ -137,11 +136,78 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                          marginRight: 'auto', paddingLeft: '30px',
                          paddingRight: '30px', paddingTop: '20px',
                          paddingBottom: '20px', border: '2px solid #DCDCDC'}}>
-              <h2>{classroom.title}</h2>
+              <h2>{classroom ? classroom.title : 'Untitled No.1'}</h2>
               <br />
-              <div>{ classroom.tags.map((tag, i) => (<Tag key={`${i}-tag`}>{tag}</Tag>))}</div>
+              <div>{
+                (classroom && classroom.tags) ? classroom.tags.map((tag, i) => (<Tag key={`${i}-tag`}>{tag}</Tag>)) : null}</div>
               <br />
-              <p style={{fontSize: '15px'}}>{classroom.description}</p>
+              <p style={{fontSize: '15px'}}>{classroom ? classroom.description : 'Lorem Ipsum...'}</p>
+            </div>
+          </div>
+          <div>
+            <div style={{textAlign: 'left', background: 'white',
+                         marginTop: '50px', marginBottom: '50px',
+                         width: '800', marginLeft: 'auto',
+                         marginRight: 'auto', paddingLeft: '30px',
+                         paddingRight: '30px', paddingTop: '20px',
+                         paddingBottom: '20px', border: '2px solid #DCDCDC'}}>
+              <h2>Emotions Summary</h2>
+              <br />
+              <p style={{fontSize: '15px'}}>
+                Discover your own emotions throughout watching the video. The line
+                chart below shows the probability of seven distinct emotions. Each
+                emotion will be a number between 0 and 1 where 1 indicates that we are
+                very confident that you are expressing that emotion. Your content creator
+                would receive a similar graph.
+              </p>
+              <div className='line-chart-wrapper' key='item' style={{marginTop: '30px'}}>
+                <LineChart width={700} height={200} data={[]} syncId="test">
+                  <CartesianGrid stroke='#f5f5f5' fill="white" />
+                  <XAxis type="number" domain={[0, this.state.videoLength]} dataKey="time" height={40}>
+                    <Label value="Time (Seconds)" />
+                  </XAxis>
+                  <YAxis type="number" domain={[0, 100]}>
+                    <Label value="Emotion Level" angle={270} />
+                  </YAxis>
+                  <Legend verticalAlign="top" height={36}/>
+                  <Tooltip />
+                  <Line
+                    key="sad"
+                    type="monotone"
+                    dataKey="sad"
+                    stroke="#FF0000"
+                    strokeOpacity="0.9"
+                    strokeDasharray="3 3" />
+                  <Line
+                    key="happy"
+                    type="monotone"
+                    dataKey="happy"
+                    stroke="#FFA500"
+                    strokeOpacity="0.9"
+                    strokeDasharray="3 3" />
+                  <Line
+                    key="confused"
+                    type="monotone"
+                    dataKey="confused"
+                    stroke="#800080"
+                    strokeOpacity="0.9"
+                    strokeDasharray="3 3" />
+                  <Line
+                    key="angry"
+                    type="monotone"
+                    dataKey="angry"
+                    stroke="#008000"
+                    strokeOpacity="0.9"
+                    strokeDasharray="3 3" />
+                  <Line
+                    key="disgusted"
+                    type="monotone"
+                    dataKey="disgusted"
+                    stroke="#0000FF"
+                    strokeOpacity="0.9"
+                    strokeDasharray="3 3" />
+                </LineChart>
+             </div>
             </div>
           </div>
         </div>
