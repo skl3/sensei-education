@@ -11,6 +11,7 @@ import Helmet from 'react-helmet';
 import { Button } from 'antd'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Row, Col } from 'antd';
 
 import { recordVideoImage } from './actions';
 import makeSelectWebcamPage from './selectors';
@@ -64,13 +65,25 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
 
   render() {
     const containerStyle = {
+      // marginRight: 'auto',
+      // marginLeft: 'auto',
+      width: '100%',
+    };
+    const youtubeStyle = {
+      background: 'black',
+      textAlign: 'center',
+    }
+
+    const footerContainerStyle = {
       paddingRight: '15px',
       paddingLeft: '15px',
       marginRight: 'auto',
       marginLeft: 'auto',
-      marginTop: '30px',
-      width: '970px',
-    };
+      paddingTop: '30px',
+      paddingBottom: '30px',
+      textAlign: 'center',
+    }
+
     return (
       <div>
         <Helmet
@@ -80,20 +93,57 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
           ]}
         />
         <div style={containerStyle}>
-          <h1>Webcam</h1>
-          <YouTube
-            videoId={'F9z_3obVjFs'}
-            onReady={this.onReady}
-            onStateChange={this.onStateChange}
-          />
-          <Webcam
-            style={{ display: 'block' }}
-            audio={false}
-            width={350}
-            height={350}
-            ref={this.setRef}
-            screenshotFormat="image/png"
-          />
+          <div style={{width: '100%', marginLeft: 'auto',
+                       marginRight: 'auto', paddingLeft: '30px',
+                       paddingRight: '30px', paddingTop: '20px'}}>
+            <div>
+              <p style={{fontSize: '15px'}}>
+                <b>Disclaimer:</b> SentiSchool will use data from your webcam to estimate
+                engagement. This data will only be shared with the content creater in an effort
+                to make content more personalized and more relevant to you. Your data will not be
+                used in any other way. To <b>opt-out</b>, block camera access via the browser.
+              </p>
+              <Row>
+                <Col span={5} offset={0}>
+                  <Webcam
+                    style={{ display: 'block' }}
+                    audio={false}
+                    width={200}
+                    height={200}
+                    ref={this.setRef}
+                    screenshotFormat="image/png"
+                  />
+                </Col>
+                <Col span={8} offset={0} style={{paddingTop: '30px'}}>
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <div style={youtubeStyle}>
+            <YouTube
+              videoId={'F9z_3obVjFs'}
+              onReady={this.onReady}
+              onStateChange={this.onStateChange}
+              opts={{width: '800', height: '500'}}
+              width={800}
+            />
+          </div>
+          <div>
+            <div style={{textAlign: 'left', background: 'white',
+                         marginTop: '50px', marginBottom: '50px',
+                         width: '800', marginLeft: 'auto',
+                         marginRight: 'auto', paddingLeft: '30px',
+                         paddingRight: '30px', paddingTop: '20px',
+                         paddingBottom: '20px', border: '2px solid #DCDCDC'}}>
+              <h2>How Hedge Funds Make Money</h2>
+              <br />
+              <p style={{fontSize: '15px'}}>Foobar description</p>
+            </div>
+          </div>
+        </div>
+        <hr color="#DCDCDC" />
+        <div style={footerContainerStyle}>
+          <h2 style={{color: "grey", fontSize: "15px"}}>SentiSchool. Copyright © 2017. All Rights Reserved.</h2>
         </div>
       </div>
     );
