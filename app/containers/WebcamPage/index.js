@@ -129,35 +129,35 @@ export class WebcamPage extends React.Component { // eslint-disable-line react/p
                         key="sad"
                         type="monotone"
                         dataKey="sad"
-                        stroke="#ff7300"
+                        stroke="#FF0000"
                         strokeOpacity="0.9"
                         strokeDasharray="3 3" />
                       <Line
                         key="happy"
                         type="monotone"
                         dataKey="happy"
-                        stroke="#ff7300"
+                        stroke="#FFA500"
                         strokeOpacity="0.9"
                         strokeDasharray="3 3" />
                       <Line
                         key="confused"
                         type="monotone"
                         dataKey="confused"
-                        stroke="#ff7300"
+                        stroke="#800080"
                         strokeOpacity="0.9"
                         strokeDasharray="3 3" />
                       <Line
                         key="angry"
                         type="monotone"
                         dataKey="angry"
-                        stroke="#ff7300"
+                        stroke="#008000"
                         strokeOpacity="0.9"
                         strokeDasharray="3 3" />
                       <Line
                         key="disgusted"
                         type="monotone"
                         dataKey="disgusted"
-                        stroke="#ff7300"
+                        stroke="#0000FF"
                         strokeOpacity="0.9"
                         strokeDasharray="3 3" />
                     </LineChart>
